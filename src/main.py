@@ -8,6 +8,7 @@ from google.appengine.ext import ndb
 import fix_path
 
 import app.views.simple
+import app.views.mission
 import app.views.user
 
 
@@ -22,6 +23,10 @@ application = ndb.toplevel(webapp2.WSGIApplication([
   webapp2.Route('/logout', app.views.simple.Logout, 'logout'),
 
   webapp2.Route('/signup', app.views.user.Signup, 'signup'),
+
+  webapp2.Route('/missions/create', app.views.mission.Create, 'create_mission'),
+  webapp2.Route('/missions/<guid>', app.views.mission.View, 'view_mission'),
+  webapp2.Route('/missions/update/<guid>', app.views.mission.Update, 'update_mission'),
 
   (r'.*', app.views.simple.NotFound),
 ], debug=DEBUG_MODE))

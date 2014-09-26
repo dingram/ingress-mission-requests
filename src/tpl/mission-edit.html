@@ -1,0 +1,14 @@
+{% extends '_base.html' %}
+{% block meta %}
+<meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
+{% endblock %}
+{% block bodycontent %}
+<h1>Ingress Mission Requests: View Mission</h1>
+{% if not mission %}
+<p>Mission not found.</p>
+{% else %}
+<p>Edit your mission.</p>
+<form action="/missions/{{mission.guid}}/update" method="POST">
+</form>
+{% endif %}
+{% endblock %}

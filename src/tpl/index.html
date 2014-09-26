@@ -10,6 +10,6 @@
 {% else %}{% if not USER %}
 <p>Looks like you need to <a href="/signup">sign up</a>.</p>
 {% else %}
-<p>Welcome, {{USER.nickname}}.</p>
+<p>Welcome, {{USER.nickname}}. <a href="/missions/create">Propose a new mission</a>.</p>
 {% endif %}{% endif %}
 {% endblock %}
