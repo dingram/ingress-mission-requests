@@ -3,6 +3,7 @@ import logging
 
 from google.appengine.ext import ndb
 
+from app.data import AutoUuidProperty
 from app.data import GuidModel
 from app.data import GuidProperty
 from app.data import GuidSuffix
@@ -29,6 +30,7 @@ class User(GuidModel):
   avatar_url = ndb.StringProperty(indexed=False)
   timezone = ndb.StringProperty(indexed=True, default=None)
   is_superadmin = ndb.BooleanProperty(indexed=False, default=False)
+  xsrf_key = AutoUuidProperty(indexed=False)
 
   def _prepare_for_put(self):
     """Prepare model for putting to the datastore.

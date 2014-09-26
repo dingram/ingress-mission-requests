@@ -1,6 +1,10 @@
+import base64
+import hashlib
+import hmac
 import json
 import logging
 import os
+import uuid
 
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.webapp import template
@@ -13,6 +17,7 @@ import datastore_stats
 from app.data.models import User
 from app.util import users
 from app.util.helpers import json_encode
+from app.util.helpers import to_ms
 from app.util.timing import Stopwatch
 
 
@@ -36,6 +41,7 @@ class RequestHandler(webapp2.RequestHandler):
       other request-related logging, such as request parameters.
   """
   _log = True
+  XSRF_NAME = '__xsrf__'
 
   def dispatch(self, *args, **kwargs):
     self.gae_user = users.get_current_user()
@@ -76,8 +82,66 @@ class RequestHandler(webapp2.RequestHandler):
       template_file)[1])[0]
     if not 'USER' in params:
       params['USER'] = self.user
+    params['XSRF_NAME'] = self.XSRF_NAME
+    params['XSRF_TOKEN'] = self.get_xsrf_token()
     path = os.path.join(TEMPLATE_DIR, template_file)
     self.response.out.write(template.render(path, params))
+
+  def xsrf_key(self):
+    # check xsrf_key to see if it's been saved to the datastore
+    if self.user and self.user.xsrf_key:
+      key = self.user.xsrf_key
+    elif self.gae_user:
+      key = self.gae_user.user_id()
+    else:
+      key = os.environ.get('REMOTE_ADDR')
+    return str(key) + str(os.environ.get('CURRENT_VERSION_ID'))
+
+  def xsrf_signature(self, timestamp, nonce):
+    logging.info(type(self.xsrf_key()))
+    return base64.urlsafe_b64encode(hmac.HMAC(
+        self.xsrf_key(),
+        timestamp + nonce,
+        hashlib.sha1
+    ).digest()).strip('=')
+
+  def get_xsrf_token(self, key=None):
+    timestamp = str(to_ms())
+    nonce = base64.urlsafe_b64encode(uuid.uuid4().bytes).strip('=')
+    if key:
+      nonce += str(key)
+    signature = self.xsrf_signature(timestamp, nonce)
+    return ':'.join([timestamp, nonce, signature])
+
+  def check_xsrf_token(self, required=True, key=None):
+    token = self.request.POST.get(self.XSRF_NAME)
+    if not token:
+      if required:
+        logging.warning('XSRF violation: not present')
+        self.abort(403)
+      else:
+        return False
+    try:
+      timestamp, nonce, signature = token.split(':')
+      if not timestamp or not nonce or not signature:
+        logging.warning('XSRF violation: improper token format')
+        self.abort(403)
+      if key:
+        nonce += str(key)
+      expected_sig = self.xsrf_signature(timestamp, nonce)
+      if signature != expected_sig:
+        logging.warning('XSRF violation: signature mismatch')
+        self.abort(403)
+      # 12hr limit
+      if to_ms() > int(timestamp) + (3600000 * 12):
+        logging.warning('XSRF violation: timestamp too old')
+    except webapp2.HTTPException:
+      # Let aborts through
+      pass
+    except:
+      logging.exception('XSRF violation: exception')
+      self.abort(403)
+    return True
 
   def render_json(self, *args, **kwargs):
     """Render standard-format JSON to the response output stream, including
