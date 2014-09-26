@@ -1,8 +1,6 @@
 import logging
 import re
 
-from google.appengine.api import users
-
 from app.data import models
 from app.util.request import RequestHandler
 
@@ -18,10 +16,16 @@ class Landing(RequestHandler):
 class Signup(RequestHandler):
 
   def get(self, *args, **kwargs):
+    if not self.gae_user:
+      self.redirect('/login')
+      return
     self.user = models.User.get_current(allow_creation=True)
     self.render_page('signup.html')
 
   def post(self, *args, **kwargs):
+    if not self.gae_user:
+      self.redirect('/login')
+      return
     nickname = self.request.POST.get('nickname')
     faction = self.request.POST.get('faction')
     error = None
