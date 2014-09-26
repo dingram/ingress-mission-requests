@@ -10,6 +10,35 @@
 {% else %}{% if not USER %}
 <p>Looks like you need to <a href="/signup">sign up</a>.</p>
 {% else %}
-<p>Welcome, {{USER.nickname}}. <a href="/missions/create">Propose a new mission</a>.</p>
+{% if not drafts and not review_queue %}
+<p>Welcome, {{USER.nickname}}. To get started, <a href="/missions/create">propose a new mission</a>.</p>
+{% else %}
+<p>Welcome, {{USER.nickname}}.</p>
+
+{% if not drafts %}
+<p>You have no draft missions right now.</p>
+{% else %}
+<p>Your draft missions:</p>
+<ul>
+{% for m in drafts %}
+	<li><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a>, last modified at {{m.last_modified|default:'[unknown]'}} UTC</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if not review_queue %}
+<p>You have no missions submitted for review right now.</p>
+{% else %}
+<p>Your missions in the review queue:</p>
+<ul>
+{% for m in review_queue %}
+	<li><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<p><a href="/missions/create">Propose a new mission</a>.</p>
+{% endif %}
+
 {% endif %}{% endif %}
 {% endblock %}

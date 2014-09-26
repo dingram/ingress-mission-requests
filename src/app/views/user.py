@@ -8,8 +8,22 @@ from app.util.request import RequestHandler
 class Landing(RequestHandler):
 
   def get(self, *args, **kwargs):
+    draft_missions = []
+    review_queue = []
+
+    if self.user:
+      for m in models.Mission.query(models.Mission.owner_guid == self.user.guid):
+        if m.state == 'DRAFT':
+          draft_missions.append(m)
+        else:
+          review_queue.append(m)
+        draft_missions.sort(key=lambda x: x.title.lower() if x.title else '')
+        review_queue.sort(key=lambda x: x.title.lower() if x.title else '')
+
     self.render_page('index.html', {
       'logged_in': self.gae_user is not None,
+      'drafts': draft_missions,
+      'review_queue': review_queue,
     })
 
 
