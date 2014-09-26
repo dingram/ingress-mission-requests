@@ -434,9 +434,9 @@ class RpcRequestHandler(RequestHandler):
     else:
       logging.info('No GAE user')
 
-    #if self.user and self.user.is_banned:
-    #  logging.info('USER BANNED; request forbidden')
-    #  self.abort(403)
+    if self.user and self.user.is_banned:
+      logging.info('USER BANNED; request forbidden')
+      self.abort(403)
 
   def post(self, *args, **kwargs):
     """Handle a POST request."""

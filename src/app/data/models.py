@@ -30,6 +30,7 @@ class User(GuidModel):
   avatar_url = ndb.StringProperty(indexed=False)
   timezone = ndb.StringProperty(indexed=True, default=None)
   is_superadmin = ndb.BooleanProperty(indexed=False, default=False)
+  is_banned = ndb.BooleanProperty(indexed=False, default=False)
   xsrf_key = AutoUuidProperty(indexed=False)
 
   def _prepare_for_put(self):
