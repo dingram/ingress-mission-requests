@@ -1,0 +1,19 @@
+{% extends '_base.html' %}
+{% block meta %}
+<meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
+{% endblock %}
+{% block bodycontent %}
+<h1>Ingress Mission Requests Signup</h1>
+<p>So, you want to ask for missions? Sign up here.</p>
+{% if error %}<p><strong>ERROR:</strong> {{error}}</p>{% endif %}
+<form action="" method="POST">
+	<p><strong>Email:</strong> {{USER.email}}</p>
+	<p><label><strong>Nickname:</strong> <input type="text" pattern="[0-9a-z]{3,15}" maxlength="15" required value="{{USER.nickname}}"></label></p>
+	<p><label><strong>Faction:</strong> <select name="faction" required>
+			<option></option>
+			<option value="ENLIGHTENED"{% if USER.faction == 'ENLIGHTENED' %} selected{% endif %}>Enlightened</option>
+			<option value="RESISTANCE"{% if USER.faction == 'RESISTANCE' %} selected{% endif %}>Resistance</option>
+	</select></label></p>
+	<p><input type="submit" value="{% if not USER.created %}Sign up{% else %}Update{% endif %}"></p>
+</form>
+{% endblock %}

@@ -20,6 +20,8 @@ application = ndb.toplevel(webapp2.WSGIApplication([
   webapp2.Route('/login',  app.views.simple.Login,  'login'),
   webapp2.Route('/logout', app.views.simple.Logout, 'logout'),
 
+  webapp2.Route('/signup', app.views.simple.SimplePage, 'signup', defaults={'_template': 'signup.html'}),
+
   (r'.*', app.views.simple.NotFound),
 ], debug=DEBUG_MODE))
 
