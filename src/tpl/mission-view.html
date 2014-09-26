@@ -7,6 +7,24 @@
 {% if not mission %}
 <p>Mission not found.</p>
 {% else %}
-<p>See your mission.</p>
+<h2>{{mission.title}}</h2>
+<p>{% if mission.icon_url %}<img src="{{mission.icon_url}}">{% endif %} {{mission.type}}</p>
+<p>{{mission.description}}</p>
+
+<h3>Waypoints</h3>
+
+{% for obj in mission.objectives %}
+<p>{{forloop.counter}}. <a href="https://www.ingress.com/intel/?ll={{obj.lat}},{{obj.lng}}&pll={{obj.lat}},{{obj.lng}}&z=17" target="_blank">{{obj.portal_title}}</a><br>
+<strong>Mission:</strong> {{obj.type}}
+{% if obj.location_clue %}<br><strong>Location clue:</strong> {{obj.location_clue}}{% endif %}
+{% if obj.description %}<br><strong>Description:</strong> {{obj.description}}{% endif %}
+{% if obj.question %}<br><strong>Question:</strong> {{obj.question}}{% endif %}
+{% if obj.passphrase %}<br><strong>Answer:</strong> {{obj.passphrase}}{% endif %}
+</p>
+{% endfor %}
+
+<h3>Review status</h3>
+<p>{{mission.state}} as of {{mission.last_updated}} UTC</p>
+
 {% endif %}
 {% endblock %}
