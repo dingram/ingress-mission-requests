@@ -14,15 +14,16 @@
 {% else %}
 {% if error %}<p><strong>ERROR:</strong> {{error}}</p>{% endif %}
 <form action="/missions/{{mission.guid}}/update" method="POST">
+	<input type="hidden" name="{{XSRF_NAME}}" value="{{XSRF_TOKEN}}">
 
 	<fieldset>
 	<legend>Basic details</legend>
 
 	<p><label><strong>Mission type:</strong> <select name="type" required>
 			<option></option>
-			<option value="SEQUENTIAL">Sequential</option>
-			<option value="SEQUENTIAL_HIDDEN">Sequential, with hidden locations</option>
-			<option value="ANY_ORDER">Any order</option>
+			<option value="SEQUENTIAL"{% if mission.type == 'SEQUENTIAL' %} selected{% endif %}>Sequential</option>
+			<option value="SEQUENTIAL_HIDDEN"{% if mission.type == 'SEQUENTIAL_HIDDEN' %} selected{% endif %}>Sequential, with hidden locations</option>
+			<option value="ANY_ORDER"{% if mission.type == 'ANY_ORDER' %} selected{% endif %}>Any order</option>
 	</select></label></p>
 	<p><label><strong>Title:</strong> <input name="title" type="text" value="{{mission.title|default:''}}" maxlength="50" required></label></p>
 	<p>{% if mission.icon_url %}<img src="{{mission.icon_url}}"> {% endif %}<label><strong>Icon URL:</strong> <input name="icon_url" type="text" value="{{mission.icon_url|default:''}}"></label><br>
@@ -42,7 +43,7 @@
 		<p><strong><u>Objective {{forloop.counter}}</u></strong></p>
 		<p><label><strong>Title:</strong> <input name="portal_title_{{forloop.counter}}" type="text" value="{{o.portal_title|default:''}}" maxlength="50"></label></p>
 		<p><label><strong>Intel link:</strong> <input name="intel_link_{{forloop.counter}}" type="text" value="{% if o.latE6 and o.lngE6 %}https://www.ingress.com/intel?ll={{o.lat}},{{o.lng}}&amp;pll={{o.lat}},{{o.lng}}&amp;z=17{% endif %}"></label></p>
-		<p><label><strong>Action:</strong> <select name="type" required>
+		<p><label><strong>Action:</strong> <select name="type_{{forloop.counter}}">
 				<option></option>
 				<option value="HACK_PORTAL">Hack this portal</option>
 				<option value="INSTALL_ANY_MOD">Install a mod on this portal</option>

@@ -26,7 +26,7 @@ application = ndb.toplevel(webapp2.WSGIApplication([
 
   webapp2.Route('/missions/create', app.views.mission.Create, 'create_mission'),
   webapp2.Route('/missions/<guid>', app.views.mission.View, 'view_mission'),
-  webapp2.Route('/missions/update/<guid>', app.views.mission.Update, 'update_mission'),
+  webapp2.Route('/missions/<guid>/update', app.views.mission.Update, 'update_mission'),
 
   (r'.*', app.views.simple.NotFound),
 ], debug=DEBUG_MODE))

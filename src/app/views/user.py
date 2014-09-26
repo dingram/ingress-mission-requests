@@ -68,7 +68,7 @@ class Signup(RequestHandler):
 
     if not error:
       self.user.put()
-      self.redirect('/', abort=303)
+      self.redirect('/', abort=True, code=303)
       return
     else:
       self.render_page('signup.html', {'error': error})
