@@ -36,6 +36,10 @@ class View(RequestHandler):
     if (mission.state == 'DRAFT' and is_owner) or self.user.is_superadmin:
       template = 'mission-edit.html'
 
+      # Add some empty waypoints to keep things interesting
+      for i in range(4):
+        mission.objectives.append(models.MissionObjective())
+
     self.render_page(template, {
       'mission': mission,
     })

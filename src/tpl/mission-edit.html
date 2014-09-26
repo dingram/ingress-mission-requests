@@ -1,14 +1,75 @@
 {% extends '_base.html' %}
+{% block css %}
+<style>
+.faded { opacity: 0.8; }
+</style>
+{% endblock %}
 {% block meta %}
 <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
 {% endblock %}
 {% block bodycontent %}
-<h1>Ingress Mission Requests: View Mission</h1>
+<h1>Ingress Mission Requests: Propose Mission</h1>
 {% if not mission %}
 <p>Mission not found.</p>
 {% else %}
-<p>Edit your mission.</p>
+{% if error %}<p><strong>ERROR:</strong> {{error}}</p>{% endif %}
 <form action="/missions/{{mission.guid}}/update" method="POST">
+
+	<fieldset>
+	<legend>Basic details</legend>
+
+	<p><label><strong>Mission type:</strong> <select name="type" required>
+			<option></option>
+			<option value="SEQUENTIAL">Sequential</option>
+			<option value="SEQUENTIAL_HIDDEN">Sequential, with hidden locations</option>
+			<option value="ANY_ORDER">Any order</option>
+	</select></label></p>
+	<p><label><strong>Title:</strong> <input name="title" type="text" value="{{mission.title|default:''}}" maxlength="50" required></label></p>
+	<p>{% if mission.icon_url %}<img src="{{mission.icon_url}}"> {% endif %}<label><strong>Icon URL:</strong> <input name="icon_url" type="text" value="{{mission.icon_url|default:''}}"></label><br>
+	<span class="faded">The image should be 512x512px and must be in JPG or PNG format.</span></p>
+	<p><label><strong>Description:</strong><br>
+	<textarea name="description">{{mission.description|default:''}}</textarea></label><br>
+	<span class="faded">Maximum 200 characters.</span></p>
+
+	</fieldset>
+
+	<fieldset>
+	<legend>Waypoints</legend>
+
+	{% for o in mission.objectives %}
+	{% if not forloop.first %}<hr>{% endif %}
+	<div class="objective">
+		<p><strong><u>Objective {{forloop.counter}}</u></strong></p>
+		<p><label><strong>Title:</strong> <input name="portal_title_{{forloop.counter}}" type="text" value="{{o.portal_title|default:''}}" maxlength="50"></label></p>
+		<p><label><strong>Intel link:</strong> <input name="intel_link_{{forloop.counter}}" type="text" value="{% if o.latE6 and o.lngE6 %}https://www.ingress.com/intel?ll={{o.lat}},{{o.lng}}&amp;pll={{o.lat}},{{o.lng}}&amp;z=17{% endif %}"></label></p>
+		<p><label><strong>Action:</strong> <select name="type" required>
+				<option></option>
+				<option value="HACK_PORTAL">Hack this portal</option>
+				<option value="INSTALL_ANY_MOD">Install a mod on this portal</option>
+				<option value="CAPTURE_PORTAL">Capture this portal (or upgrade it/add a mod)</option>
+				<option value="LINK_FROM_PORTAL">Create a link from this portal</option>
+				<option value="FIELD_FROM_PORTAL">Create a field at this portal</option>
+				<option value="ENTER_PASSPHRASE">Answer a question</option>
+		</select></label></p>
+		<p><label><strong>Location clue:</strong><br>
+		<textarea name="location_clue_{{forloop.counter}}">{{o.location_clue|default:''}}</textarea></label><br>
+		<span class="faded">Maximum 200 characters. Only applies for sequential+hidden missions, where it is required.</span></p>
+		<p><label><strong>Description:</strong><br>
+		<textarea name="description_{{forloop.counter}}">{{o.description|default:''}}</textarea></label><br>
+		<span class="faded">Maximum 200 characters. Optional.</span></p>
+		<p><label><strong>Question:</strong><br>
+		<textarea name="question_{{forloop.counter}}">{{o.question|default:''}}</textarea></label><br>
+		<span class="faded">Maximum 200 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
+		<p><label><strong>Answer:</strong><br>
+		<textarea name="answer_{{forloop.counter}}">{{o.passphrase|default:''}}</textarea></label><br>
+		<span class="faded">Maximum 50 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
+	</div>
+	{% endfor %}
+
+	</fieldset>
+
+	<p class="faded">To add more waypoints, save a draft. Empty waypoints will be ignored.</p>
+	<p><input type="submit" name="save" value="Save Draft"> <input type="submit" name="review" value="Send for Review" onclick="confirm('Are you sure you want to send your mission for review? You can\'t change it afterwards.')" disabled></p>
 </form>
 {% endif %}
 {% endblock %}
