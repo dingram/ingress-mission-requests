@@ -185,7 +185,7 @@ class Mission(GuidModel):
   owner_email = ndb.StringProperty(indexed=False)
   owner_nickname = ndb.StringProperty(indexed=True)
   owner_faction = ndb.StringProperty(indexed=True)
-  last_updated = ndb.DateTimeProperty(indexed=True, auto_now=True)
+  last_modified = ndb.DateTimeProperty(indexed=True, auto_now=True)
   drafted = ndb.DateTimeProperty(indexed=True, auto_now_add=True)
   sent_for_review = ndb.DateTimeProperty(indexed=True)
   started_review = ndb.DateTimeProperty(indexed=True)
