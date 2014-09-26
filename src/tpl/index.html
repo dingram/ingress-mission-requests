@@ -5,4 +5,11 @@
 {% block bodycontent %}
 <h1>Ingress Mission Requests</h1>
 <p>Somewhere for you to request missions to be created on your behalf.</p>
+{% if not logged_in %}
+<p>Looks like you need to <a href="/login">log in</a> first.</p>
+{% else %}{% if not USER %}
+<p>Looks like you need to <a href="/signup">sign up</a>.</p>
+{% else %}
+<p>Welcome, {{USER.nickname}}.</p>
+{% endif %}{% endif %}
 {% endblock %}
