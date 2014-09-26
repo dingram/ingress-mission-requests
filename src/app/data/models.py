@@ -171,6 +171,12 @@ class MissionObjective(GuidModel):
   passphrase = ndb.StringProperty(indexed=False)
   s2_cells = ndb.StringProperty(indexed=False, repeated=True)
 
+  def lat(self):
+    return float(self.latE6) / 1e6
+
+  def lng(self):
+    return float(self.lngE6) / 1e6
+
 
 class Mission(GuidModel):
   """Datastore representation of a mission."""
@@ -179,6 +185,7 @@ class Mission(GuidModel):
   owner_email = ndb.StringProperty(indexed=False)
   owner_nickname = ndb.StringProperty(indexed=True)
   owner_faction = ndb.StringProperty(indexed=True)
+  last_updated = ndb.DateTimeProperty(indexed=True, auto_now=True)
   drafted = ndb.DateTimeProperty(indexed=True, auto_now_add=True)
   sent_for_review = ndb.DateTimeProperty(indexed=True)
   started_review = ndb.DateTimeProperty(indexed=True)
