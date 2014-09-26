@@ -132,4 +132,88 @@ class User(GuidModel):
     return cls.query(cls.email == email.lower()).get()
 
 
+class MissionAuditLogEntry(ndb.Model):
+  """Datastore representation of an action log entry."""
+  created = ndb.DateTimeProperty(indexed=False, auto_now_add=True)
+  action = ndb.StringProperty(indexed=False)
+  action_detail = ndb.StringProperty(indexed=False)
+
+  actor_guid = ndb.StringProperty(indexed=False)
+  actor_nickname = ndb.StringProperty(indexed=False)
+  actor_faction = ndb.StringProperty(indexed=False)
+
+  @classmethod
+  def make_entry(cls, actor, action, action_detail=None):
+    return cls(
+        action=action,
+        actor_guid=actor.guid,
+        actor_nickname=actor.nickname,
+        actor_faction=actor.faction,
+    )
+
+  @classmethod
+  def drafted(cls, user):
+    return cls.make_entry(actor=user, action='DRAFTED')
+
+
+class MissionObjective(GuidModel):
+  """Datastore representation of a mission objective/waypoint."""
+  guid = GuidProperty(suffix=GuidSuffix.MISSION_OBJECTIVE, indexed=False)
+  created = ndb.DateTimeProperty(indexed=False, auto_now_add=True)
+
+  type = ndb.StringProperty(indexed=False, choices=enums.WaypointType._values)
+  portal_title = ndb.StringProperty(indexed=False)
+  latE6 = ndb.IntegerProperty(indexed=False)
+  lngE6 = ndb.IntegerProperty(indexed=False)
+  location_clue = ndb.StringProperty(indexed=False)
+  description = ndb.StringProperty(indexed=False)
+  question = ndb.StringProperty(indexed=False)
+  passphrase = ndb.StringProperty(indexed=False)
+  s2_cells = ndb.StringProperty(indexed=False, repeated=True)
+
+
+class Mission(GuidModel):
+  """Datastore representation of a mission."""
+  guid = GuidProperty(suffix=GuidSuffix.MISSION, indexed=True)
+  owner_guid = ndb.StringProperty(indexed=True)
+  owner_email = ndb.StringProperty(indexed=False)
+  owner_nickname = ndb.StringProperty(indexed=True)
+  owner_faction = ndb.StringProperty(indexed=True)
+  drafted = ndb.DateTimeProperty(indexed=True, auto_now_add=True)
+  sent_for_review = ndb.DateTimeProperty(indexed=True)
+  started_review = ndb.DateTimeProperty(indexed=True)
+  finished_review = ndb.DateTimeProperty(indexed=True)
+  mission_creation_began = ndb.DateTimeProperty(indexed=True)
+  mission_creation_complete = ndb.DateTimeProperty(indexed=True)
+  mission_published = ndb.DateTimeProperty(indexed=True)
+  reviewer_guid = ndb.StringProperty(indexed=True)
+  reviewer_nickname = ndb.StringProperty(indexed=True)
+  reviewer_faction = ndb.StringProperty(indexed=True)
+  publisher_guid = ndb.StringProperty(indexed=True)
+  publisher_nickname = ndb.StringProperty(indexed=True)
+  publisher_faction = ndb.StringProperty(indexed=True)
+  state = ndb.StringProperty(indexed=True, choices=enums.MissionState._values,
+      default=enums.MissionState.DRAFT)
+
+  s2_cells = ndb.StringProperty(indexed=True, repeated=True)
+  title = ndb.StringProperty(indexed=True)
+  description = ndb.StringProperty(indexed=False)
+  type = ndb.StringProperty(indexed=True, choices=enums.MissionType._values)
+  icon_url = ndb.StringProperty(indexed=False)
+  objectives = ndb.LocalStructuredProperty(MissionObjective, repeated=True)
+
+  audit_log = ndb.LocalStructuredProperty(MissionAuditLogEntry, repeated=True)
+
+  @classmethod
+  def new_draft(cls, owner):
+    m = cls(
+        owner_guid=owner.guid,
+        owner_email=owner.email,
+        owner_nickname=owner.nickname,
+        owner_faction=owner.faction,
+    )
+    m.audit_log.append(MissionAuditLogEntry.drafted(owner))
+    return m
+
+
 # vim: et sw=2 ts=2 sts=2 cc=80

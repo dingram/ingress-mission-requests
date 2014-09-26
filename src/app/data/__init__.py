@@ -7,6 +7,8 @@ from app.data import enums
 
 GuidSuffix = enums.enum(
   USER = '1',
+  MISSION = '2',
+  MISSION_OBJECTIVE = '3',
 )
 
 
