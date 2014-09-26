@@ -1,0 +1,90 @@
+application: ingress-mission-requests
+version: prod
+runtime: python27
+api_version: 1
+threadsafe: true
+
+builtins:
+- admin_redirect: on
+- appstats: on
+- deferred: on
+- remote_api: on
+
+inbound_services:
+- warmup
+
+automatic_scaling:
+  min_pending_latency: 2.0s
+
+handlers:
+
+# Static files
+#--------------
+
+- url: /favicon\.ico
+  static_files: assets/favicon.ico
+  upload: assets/favicon\.ico
+  expiration: 7d
+  secure: optional
+  login: optional
+
+- url: /css
+  static_dir: assets/css
+  secure: optional
+  login: optional
+  expiration: 7d
+
+- url: /img
+  static_dir: assets/img
+  secure: optional
+  login: optional
+  expiration: 7d
+
+- url: /js
+  static_dir: assets/js
+  secure: optional
+  login: optional
+  expiration: 7d
+
+#- url: /ttf
+#  static_dir: assets/ttf
+#  secure: optional
+#  login: optional
+#  expiration: 7d
+
+# Administrivia
+#---------------
+
+- url: /ds-admin/.*
+  script: google.appengine.ext.admin.application
+  secure: always
+  login: admin
+
+#- url: /_cron/.*
+#  script: cron.application
+#  login: admin
+
+#- url: /_tasks/.*
+#  script: tasks.application
+#  login: admin
+
+# Main app
+#----------
+
+- url: /
+  script: main.application
+  secure: optional
+  login: optional
+
+- url: .*
+  script: main.application
+  secure: optional
+  login: required
+
+libraries:
+- name: webapp2
+  version: "2.5.2"
+- name: pycrypto
+  version: latest
+- name: endpoints
+  version: 1.0
