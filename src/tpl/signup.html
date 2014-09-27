@@ -9,7 +9,7 @@
 <form action="" method="POST">
 	<input type="hidden" name="{{XSRF_NAME}}" value="{{XSRF_TOKEN}}">
 	<p><strong>Email:</strong> {{USER.email}}</p>
-	<p><label><strong>Nickname:</strong> <input name="nickname" type="text" pattern="[0-9a-z]{3,15}" maxlength="15" required value="{{USER.nickname|default:''}}" autofocus></label></p>
+	<p><label><strong>Nickname:</strong> <input name="nickname" type="text" pattern="[0-9a-zA-Z]{3,15}" maxlength="15" required value="{{USER.nickname|default:''}}" autofocus></label></p>
 	<p><label><strong>Faction:</strong> <select name="faction" required>
 			<option></option>
 			<option value="ENLIGHTENED"{% if USER.faction == 'ENLIGHTENED' %} selected{% endif %}>Enlightened</option>
