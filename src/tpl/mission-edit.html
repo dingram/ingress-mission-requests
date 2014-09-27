@@ -62,7 +62,7 @@
 		<textarea name="waypoint_{{forloop.counter}}_question">{{o.question|default:''}}</textarea></label><br>
 		<span class="faded">Maximum 200 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
 		<p><label><strong>Answer:</strong><br>
-		<textarea name="waypoint_{{forloop.counter}}_answer">{{o.passphrase|default:''}}</textarea></label><br>
+		<textarea name="waypoint_{{forloop.counter}}_passphrase">{{o.passphrase|default:''}}</textarea></label><br>
 		<span class="faded">Maximum 50 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
 	</div>
 	{% endfor %}
