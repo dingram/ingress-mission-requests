@@ -39,7 +39,7 @@ class View(RequestHandler):
 
       # Add some empty waypoints to keep things interesting
       for i in range(4):
-        mission.objectives.append(models.MissionObjective())
+        mission.waypoints.append(models.MissionWaypoint())
 
     self.render_page(template, {
       'mission': mission,
@@ -74,14 +74,7 @@ class Update(RequestHandler):
       self.redirect('/missions/%s' % mission.guid, abort=True, code=303)
       return
 
-    # update model
-    mission.title = self.request.POST.get('title')
-    mission_type = self.request.POST.get('type')
-    mission.icon_url = self.request.POST.get('icon_url')
-    mission.description = self.request.POST.get('description')
-
-    # deal with waypoints
-
+    # helper function
     def err(msg):
       import urllib
       data = {'error': msg}
@@ -90,6 +83,105 @@ class Update(RequestHandler):
           code=303,
           abort=True,
       )
+
+    # update model
+    mission.title = self.request.POST.get('title', '').strip()
+    mission_type = self.request.POST.get('type').strip()
+    mission.icon_url = self.request.POST.get('icon_url', '').strip()
+    mission.description = self.request.POST.get('description', '').strip()
+
+    # deal with waypoints
+    waypoints = []
+    idx = 0
+    while True:
+      idx += 1
+      prefix = 'waypoint_%d_' % idx
+      if (prefix + 'portal_title') not in self.request.POST:
+        # No more waypoints left
+        break
+
+      title = self.request.POST.get(prefix + 'portal_title', '').strip()
+      intel_url = self.request.POST.get(prefix + 'intel_url', '').strip()
+      waypoint_type = self.request.POST.get(prefix + 'type')
+      location_clue = self.request.POST.get(prefix + 'location_clue', '').strip()
+      description = self.request.POST.get(prefix + 'description', '').strip()
+      question = self.request.POST.get(prefix + 'question', '').strip()
+      passphrase = self.request.POST.get(prefix + 'passphrase', '').strip()
+
+      # Decide whether to process this entry
+      if not title or not intel_url or not waypoint_type:
+        continue
+
+      # Basic validation
+      if len(title) > 50:
+        err('The portal title for Waypoint %d cannot be longer than 50 characters' % idx)
+        return
+      if not re.match(r'^https?://(?:[^.]+\.)ingress\.com/intel/?\?.*pll=', intel_url):
+        err('The Intel map URL for Waypoint %d must be a link to a specific portal' % idx)
+        return
+      if waypoint_type not in enums.WaypointType._values:
+        err('You must select a valid type for Waypoint %d' % idx)
+        return
+
+      # Type-specific validation
+      if mission.type == 'SEQUENTIAL_HIDDEN':
+        if idx == 1 and location_clue:
+          err('You must NOT enter a location clue for Waypoint %d' % idx)
+          return
+        if idx > 1 and not location_clue:
+          err('You must enter a location clue for Waypoint %d' % idx)
+          return
+        if len(location_clue) > 200:
+          err('The location clue for Waypoint %d cannot be longer than 200 characters' % idx)
+          return
+      elif location_clue:
+        err('You must NOT enter a location clue for Waypoint %d' % idx)
+        return
+
+      if waypoint_type == 'ENTER_PASSPHRASE':
+        if not question:
+          err('You must enter a question for Waypoint %d' % idx)
+          return
+        if len(question) > 200:
+          err('The question for Waypoint %d cannot be longer than 200 characters' % idx)
+          return
+        if not passphrase:
+          err('You must enter a passphrase for Waypoint %d' % idx)
+          return
+        if len(passphrase) > 50:
+          err('The passphrase for Waypoint %d cannot be longer than 50 characters' % idx)
+          return
+      else:
+        if question:
+          err('You must NOT enter a question for Waypoint %d' % idx)
+          return
+        if passphrase:
+          err('You must NOT enter a passphrase for Waypoint %d' % idx)
+          return
+
+      result = re.match(r'^https?://(?:[^.]+\.)ingress\.com/intel/?\?.*pll=(-?\d*\.\d*),(-?\d*\.\d*)', intel_url)
+      latE6 = 0
+      lngE6 = 0
+      try:
+        latE6 = int(float(result.group(1)) * 1e6)
+        lngE6 = int(float(result.group(2)) * 1e6)
+      except:
+        pass
+
+      if not latE6 and not lngE6:
+        err('Could not extract co-ordinates from Intel map URL for Waypoint %d' % idx)
+        return
+
+      waypoints.append(models.MissionWaypoint(
+        portal_title = title,
+        type = waypoint_type,
+        latE6 = latE6,
+        lngE6 = lngE6,
+        location_clue = location_clue,
+        description = description,
+        question = question,
+        passphrase = passphrase,
+      ))
 
     # validate
     if not mission.title:
@@ -113,6 +205,7 @@ class Update(RequestHandler):
 
     # update model phase 2
     mission.type = mission_type
+    mission.waypoints = waypoints
 
     # save
     mission.put()

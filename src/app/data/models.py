@@ -156,9 +156,9 @@ class MissionAuditLogEntry(ndb.Model):
     return cls.make_entry(actor=user, action='DRAFTED')
 
 
-class MissionObjective(GuidModel):
-  """Datastore representation of a mission objective/waypoint."""
-  guid = GuidProperty(suffix=GuidSuffix.MISSION_OBJECTIVE, indexed=False)
+class MissionWaypoint(GuidModel):
+  """Datastore representation of a mission waypoint."""
+  guid = GuidProperty(suffix=GuidSuffix.MISSION_WAYPOINT, indexed=False)
   created = ndb.DateTimeProperty(indexed=False, auto_now_add=True)
 
   type = ndb.StringProperty(indexed=False, choices=enums.WaypointType._values)
@@ -207,7 +207,7 @@ class Mission(GuidModel):
   description = ndb.StringProperty(indexed=False)
   type = ndb.StringProperty(indexed=True, choices=enums.MissionType._values)
   icon_url = ndb.StringProperty(indexed=False)
-  objectives = ndb.LocalStructuredProperty(MissionObjective, repeated=True)
+  waypoints = ndb.LocalStructuredProperty(MissionWaypoint, repeated=True)
 
   audit_log = ndb.LocalStructuredProperty(MissionAuditLogEntry, repeated=True)
 
