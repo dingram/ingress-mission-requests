@@ -76,6 +76,7 @@ class Update(RequestHandler):
 
     # helper function
     def err(msg):
+      logging.warning('Form error: %s' % msg)
       import urllib
       data = {'error': msg}
       self.redirect(
@@ -90,6 +91,11 @@ class Update(RequestHandler):
     mission.icon_url = self.request.POST.get('icon_url', '').strip()
     mission.description = self.request.POST.get('description', '').strip()
 
+    logging.debug('title: %s' % mission.title)
+    logging.debug('type: %s' % mission_type)
+    logging.debug('icon_url: %s' % mission.icon_url)
+    logging.debug('description: %s' % mission.description)
+
     # deal with waypoints
     waypoints = []
     idx = 0
@@ -100,6 +106,8 @@ class Update(RequestHandler):
         # No more waypoints left
         break
 
+      logging.debug('Processing waypoint %d' % idx)
+
       title = self.request.POST.get(prefix + 'portal_title', '').strip()
       intel_url = self.request.POST.get(prefix + 'intel_url', '').strip()
       waypoint_type = self.request.POST.get(prefix + 'type')
@@ -108,8 +116,17 @@ class Update(RequestHandler):
       question = self.request.POST.get(prefix + 'question', '').strip()
       passphrase = self.request.POST.get(prefix + 'passphrase', '').strip()
 
+      logging.debug('... title: %s' % title)
+      logging.debug('... intel: %s' % intel_url)
+      logging.debug('... type: %s' % waypoint_type)
+      logging.debug('... location_clue: %s' % location_clue)
+      logging.debug('... description: %s' % description)
+      logging.debug('... question: %s' % question)
+      logging.debug('... passphrase: %s' % passphrase)
+
       # Decide whether to process this entry
       if not title or not intel_url or not waypoint_type:
+        logging.info('Skipping empty waypoint %d' % idx)
         continue
 
       # Basic validation
@@ -172,6 +189,8 @@ class Update(RequestHandler):
         err('Could not extract co-ordinates from Intel map URL for Waypoint %d' % idx)
         return
 
+      logging.debug('... {lat,lng}E6: %d, %d' % (latE6, lngE6))
+
       waypoints.append(models.MissionWaypoint(
         portal_title = title,
         type = waypoint_type,
@@ -182,6 +201,9 @@ class Update(RequestHandler):
         question = question,
         passphrase = passphrase,
       ))
+      logging.debug('Added waypoint %d' % idx)
+
+    logging.debug('Done with waypoints; %d total' % len(waypoints))
 
     # validate
     if not mission.title:
@@ -209,6 +231,7 @@ class Update(RequestHandler):
 
     # save
     mission.put()
+    logging.debug('Mission saved.')
 
     # redirect
     self.redirect('/missions/%s' % mission.guid, abort=True, code=303)
