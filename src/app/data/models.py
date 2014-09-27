@@ -190,6 +190,7 @@ class Mission(GuidModel):
   sent_for_review = ndb.DateTimeProperty(indexed=True)
   started_review = ndb.DateTimeProperty(indexed=True)
   finished_review = ndb.DateTimeProperty(indexed=True)
+  rejection_reason = ndb.StringProperty(indexed=False, default='')
   mission_creation_began = ndb.DateTimeProperty(indexed=True)
   mission_creation_complete = ndb.DateTimeProperty(indexed=True)
   mission_published = ndb.DateTimeProperty(indexed=True)
