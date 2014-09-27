@@ -223,5 +223,14 @@ class Mission(GuidModel):
     m.audit_log.append(MissionAuditLogEntry.drafted(owner))
     return m
 
+  def is_incomplete(self):
+    """Return whether this mission is definitely incomplete (i.e. not eligible
+    to be published).
+    """
+    if not self.title or not self.description or not self.type:
+      return True
+    if len(waypoints) < 4:
+      return True
+    return False
 
 # vim: et sw=2 ts=2 sts=2 cc=80
