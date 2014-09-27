@@ -5,7 +5,7 @@
 {% block bodycontent %}
 <h1>Ingress Mission Requests Signup</h1>
 <p>So, you want to ask for missions? Sign up here.</p>
-{% if error %}<p><strong>ERROR:</strong> {{error}}</p>{% endif %}
+{% if error %}<p style="color: #c00"><strong>ERROR:</strong> {{error}}</p>{% endif %}
 <form action="" method="POST">
 	<input type="hidden" name="{{XSRF_NAME}}" value="{{XSRF_TOKEN}}">
 	<p><strong>Email:</strong> {{USER.email}}</p>

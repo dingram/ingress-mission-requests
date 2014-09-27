@@ -5,7 +5,7 @@
 {% block bodycontent %}
 <h1>Ingress Mission Requests: View Mission</h1>
 {% if not mission %}
-<p>Mission not found.</p>
+<p>Mission not found. Go <a href="/">back to the list</a>.</p>
 {% else %}
 <h2>{{mission.title|default:'(Untitled mission)'}}</h2>
 <p>{% if mission.icon_url %}<img src="{{mission.icon_url}}">{% endif %} {{mission.type|default:'(No mission type set)'}}</p>
@@ -29,6 +29,7 @@
 
 <h3>Review status</h3>
 <p>{{mission.state}} as of {{mission.last_updated}} UTC</p>
-
+<p><br></p>
+<p>[<a href="/">Back to the list</a>]</p>
 {% endif %}
 {% endblock %}

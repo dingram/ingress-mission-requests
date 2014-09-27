@@ -11,7 +11,7 @@
 <p>Looks like you need to <a href="/signup">sign up</a>.</p>
 {% else %}
 {% if not drafts and not review_queue %}
-<p>Welcome, {{USER.nickname}}. To get started, <a href="/missions/create">propose a new mission</a>.</p>
+<p>Welcome, {{USER.nickname}}. To get started, <a href="/missions/create">propose a new mission</a>, or you can <a href="/signup">update your details</a>.</p>
 {% else %}
 <p>Welcome, {{USER.nickname}}.</p>
 
@@ -37,7 +37,7 @@
 </ul>
 {% endif %}
 
-<p><a href="/missions/create">Propose a new mission</a>.</p>
+<p>[<a href="/missions/create">Propose a new mission</a>] [<a href="/signup">Update your details</a>]</p>
 {% endif %}
 
 {% endif %}{% endif %}
