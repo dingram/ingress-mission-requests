@@ -1,6 +1,8 @@
 import logging
 import re
 
+from google.appengine.ext import ndb
+
 from app.data import enums
 from app.data import models
 from app.util.request import RequestHandler
@@ -235,6 +237,23 @@ class Update(RequestHandler):
 
     # redirect
     self.redirect('/missions/%s' % mission.guid, abort=True, code=303)
+
+
+class Queue(RequestHandler):
+
+  def get(self, *args, **kwargs):
+    if not self.user or not (self.user.is_mission_creator or self.user.is_superadmin):
+      self.abort_not_found()
+      return
+
+    cursor = ndb.Cursor(urlsafe=self.request.get('start'))
+    missions, next_cursor, more = (models.Mission.query()
+        .order(models.Mission.last_modified).fetch_page(50, start_cursor=cursor))
+
+    self.render_page('queue-view.html', {
+      'missions': missions,
+      'cursor_token': next_cursor.urlsafe() if next_cursor and more else None,
+    })
 
 
 # vim: et sw=2 ts=2 sts=2 cc=80

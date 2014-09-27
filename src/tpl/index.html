@@ -37,7 +37,7 @@
 </ul>
 {% endif %}
 
-<p>[<a href="/missions/create">Propose a new mission</a>] [<a href="/signup">Update your details</a>]</p>
+<p>[<a href="/missions/create">Propose a new mission</a>] [<a href="/signup">Update your details</a>]{% if USER.is_superadmin or USER.is_mission_creator %} [<a href="/queue">View the queue</a>]{% endif %}</p>
 {% endif %}
 
 {% endif %}{% endif %}

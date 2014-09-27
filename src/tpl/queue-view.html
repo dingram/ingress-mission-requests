@@ -1,0 +1,33 @@
+{% extends '_base.html' %}
+{% block meta %}
+<meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
+{% endblock %}
+{% block bodycontent %}
+<h1>Ingress Mission Requests Queue</h1>
+<p>Welcome to the queue, {{USER.nickname}}. [<a href="/">Back home</a>]</p>
+
+{% if cursor_token %}<p><a href="/queue?start={{cursor_token}}">Next &gt;</a></p>{% endif %}
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>State</th>
+			<th>Owner</th>
+			<th>Last modified</th>
+			<th>Ready for review?</th>
+		</tr>
+	</thead>
+	<tbody>
+{% for m in missions %}
+		<tr>
+			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
+			<td>{{m.state}}</td>
+			<td>{{m.owner_nickname}}</td>
+			<td>{{m.last_modified}} UTC</td>
+			<td>{% if m.is_incomplete %}Definitely NOT!{% else %}{% if m.state == 'DRAFT' %}Maybe.{% else %}Yes.{% endif %}{% endif %}</a></td>
+		</tr>
+{% endfor %}
+</table>
+{% if cursor_token %}<p><a href="/queue?start={{cursor_token}}">Next &gt;</a></p>{% endif %}
+
+{% endblock %}
