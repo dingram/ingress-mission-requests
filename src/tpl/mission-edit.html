@@ -41,28 +41,28 @@
 	{% if not forloop.first %}<hr>{% endif %}
 	<div class="objective">
 		<p><strong><u>Objective {{forloop.counter}}</u></strong></p>
-		<p><label><strong>Title:</strong> <input name="portal_title_{{forloop.counter}}" type="text" value="{{o.portal_title|default:''}}" maxlength="50"></label></p>
-		<p><label><strong>Intel link:</strong> <input name="intel_link_{{forloop.counter}}" type="text" value="{% if o.latE6 and o.lngE6 %}https://www.ingress.com/intel?ll={{o.lat}},{{o.lng}}&amp;pll={{o.lat}},{{o.lng}}&amp;z=17{% endif %}"></label></p>
-		<p><label><strong>Action:</strong> <select name="type_{{forloop.counter}}">
+		<p><label><strong>Title:</strong> <input name="waypoint_{{forloop.counter}}_portal_title" type="text" value="{{o.portal_title|default:''}}" maxlength="50"></label></p>
+		<p><label><strong>Intel link:</strong> <input name="waypoint_{{forloop.counter}}_intel_link" type="text" value="{% if o.latE6 and o.lngE6 %}https://www.ingress.com/intel?ll={{o.lat}},{{o.lng}}&amp;pll={{o.lat}},{{o.lng}}&amp;z=17{% endif %}"></label></p>
+		<p><label><strong>Action:</strong> <select name="waypoint_{{forloop.counter}}_type">
 				<option></option>
-				<option value="HACK_PORTAL">Hack this portal</option>
-				<option value="INSTALL_ANY_MOD">Install a mod on this portal</option>
-				<option value="CAPTURE_PORTAL">Capture this portal (or upgrade it/add a mod)</option>
-				<option value="LINK_FROM_PORTAL">Create a link from this portal</option>
-				<option value="FIELD_FROM_PORTAL">Create a field at this portal</option>
-				<option value="ENTER_PASSPHRASE">Answer a question</option>
+				<option value="HACK_PORTAL"{% if o.type == 'HACK_PORTAL' %} selected{% endif %}>Hack this portal</option>
+				<option value="INSTALL_ANY_MOD"{% if o.type == 'INSTALL_ANY_MOD' %} selected{% endif %}>Install a mod on this portal</option>
+				<option value="CAPTURE_PORTAL"{% if o.type == 'CAPTURE_PORTAL' %} selected{% endif %}>Capture this portal (or upgrade it/add a mod)</option>
+				<option value="LINK_FROM_PORTAL"{% if o.type == 'LINK_FROM_PORTAL' %} selected{% endif %}>Create a link from this portal</option>
+				<option value="FIELD_FROM_PORTAL"{% if o.type == 'FIELD_FROM_PORTAL' %} selected{% endif %}>Create a field at this portal</option>
+				<option value="ENTER_PASSPHRASE"{% if o.type == 'ENTER_PASSPHRASE' %} selected{% endif %}>Answer a question</option>
 		</select></label></p>
 		<p><label><strong>Location clue:</strong><br>
-		<textarea name="location_clue_{{forloop.counter}}">{{o.location_clue|default:''}}</textarea></label><br>
+		<textarea name="waypoint_{{forloop.counter}}_location_clue">{{o.location_clue|default:''}}</textarea></label><br>
 		<span class="faded">Maximum 200 characters. Only applies for sequential+hidden missions, where it is required.</span></p>
 		<p><label><strong>Description:</strong><br>
-		<textarea name="description_{{forloop.counter}}">{{o.description|default:''}}</textarea></label><br>
+		<textarea name="waypoint_{{forloop.counter}}_description">{{o.description|default:''}}</textarea></label><br>
 		<span class="faded">Maximum 200 characters. Optional.</span></p>
 		<p><label><strong>Question:</strong><br>
-		<textarea name="question_{{forloop.counter}}">{{o.question|default:''}}</textarea></label><br>
+		<textarea name="waypoint_{{forloop.counter}}_question">{{o.question|default:''}}</textarea></label><br>
 		<span class="faded">Maximum 200 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
 		<p><label><strong>Answer:</strong><br>
-		<textarea name="answer_{{forloop.counter}}">{{o.passphrase|default:''}}</textarea></label><br>
+		<textarea name="waypoint_{{forloop.counter}}_answer">{{o.passphrase|default:''}}</textarea></label><br>
 		<span class="faded">Maximum 50 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
 	</div>
 	{% endfor %}
