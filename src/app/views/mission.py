@@ -256,10 +256,20 @@ class Queue(RequestHandler):
       return
 
     cursor = ndb.Cursor(urlsafe=self.request.get('start'))
-    missions, next_cursor, more = (models.Mission.query()
-        .order(models.Mission.last_modified).fetch_page(50, start_cursor=cursor))
+    unfiltered = 'unfiltered' in self.request.GET
+
+    if unfiltered:
+      q = models.Mission.query()
+    else:
+      q = models.Mission.query(
+          models.Mission.state == 'AWAITING_REVIEW',
+      )
+
+    q = q.order(-models.Mission.last_modified)
+    missions, next_cursor, more = (q.fetch_page(50, start_cursor=cursor))
 
     self.render_page('queue-view.html', {
+      'unfiltered': unfiltered,
       'missions': missions,
       'cursor_token': next_cursor.urlsafe() if next_cursor and more else None,
     })

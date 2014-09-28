@@ -5,33 +5,63 @@
 {% block meta %}
 <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
 {% endblock %}
+{% block html_imports %}
+<link rel="import" href="/polymer-src/paper-button/paper-button.html">
+{% endblock %}
 {% block title %}Ingress Mission Request Queue{% endblock %}
 {% block pagetitle %}Ingress Mission Request Queue{% endblock %}
 {% block bodycontent %}
-<p>Welcome to the queue, {{USER.nickname}}.</p>
+<p>Welcome to the {% if unfiltered %}full, unfiltered queue{% else %}queue of missions ready for review{% endif %}, {{USER.nickname}}.</p>
+
+{% if my_missions %}
+<h2>Your missions to review</h2>
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Owner</th>
+			<th>Last modified</th>
+			<th>State</th>
+		</tr>
+	</thead>
+	<tbody>
+{% for m in my_missions %}
+		<tr>
+			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
+			<td>{{m.owner_nickname}}</td>
+			<td>{{m.last_modified}} UTC</td>
+			<td>{{m.state}}</td>
+		</tr>
+{% endfor %}
+</table>
+
+<h2>The full queue</h2>
+{% endif %}
 
 {% if cursor_token %}<p><a href="/queue?start={{cursor_token}}">Next &gt;</a></p>{% endif %}
 <table>
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>State</th>
 			<th>Owner</th>
 			<th>Last modified</th>
-			<th>Ready for review?</th>
+			{% if unfiltered %}<th>State</th>{% endif %}
+			{% if unfiltered %}<th>Ready for review?</th>{% endif %}
 		</tr>
 	</thead>
 	<tbody>
 {% for m in missions %}
 		<tr>
 			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
-			<td>{{m.state}}</td>
 			<td>{{m.owner_nickname}}</td>
 			<td>{{m.last_modified}} UTC</td>
-			<td>{% if m.is_incomplete %}Definitely NOT!{% else %}{% if m.state == 'DRAFT' %}Maybe.{% else %}Yes.{% endif %}{% endif %}</a></td>
+			{% if unfiltered %}<td>{{m.state}}</td>{% endif %}
+			{% if unfiltered %}<td>{% if m.is_incomplete %}Definitely NOT!{% else %}{% if m.state == 'DRAFT' %}Maybe.{% else %}Yes.{% endif %}{% endif %}</a></td>{% endif %}
 		</tr>
 {% endfor %}
 </table>
 {% if cursor_token %}<p><a href="/queue?start={{cursor_token}}">Next &gt;</a></p>{% endif %}
+
+<p style="margin-top: 20px"><a href="/queue{% if not unfiltered %}?unfiltered{% endif %}"><paper-button>View {% if not unfiltered %}raw{% else %}ready-to-review{% endif%} queue</paper-button></a></p>
 
 {% endblock %}

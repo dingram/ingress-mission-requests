@@ -1,0 +1,6 @@
+indexes:
+- kind: Mission
+  properties:
+  - name: state
+  - name: last_modified
+    direction: desc
