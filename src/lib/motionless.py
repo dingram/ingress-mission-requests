@@ -79,7 +79,7 @@ class Map(object):
     MAX_Y = 640
     def __init__(self, size_x, size_y, maptype):
 
-        self.base_url = 'http://maps.google.com/maps/api/staticmap?'
+        self.base_url = 'https://maps.google.com/maps/api/staticmap?'
         self.size_x = size_x
         self.size_y = size_y
         self.sensor = False
