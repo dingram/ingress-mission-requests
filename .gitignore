@@ -1,2 +1,6 @@
 .*.sw?
 *.py[co]
+src/assets/bower_components/*/test/
+src/assets/bower_components/*/build.log
+src/assets/bower_components/*/README.md
+src/assets/bower_components/*/demo.html
