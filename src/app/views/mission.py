@@ -1,3 +1,4 @@
+import datetime
 import logging
 import re
 
@@ -230,6 +231,13 @@ class Update(RequestHandler):
     # update model phase 2
     mission.type = mission_type
     mission.waypoints = waypoints
+
+    if 'review' in self.request.POST:
+      if mission.is_incomplete():
+        err('The mission is not ready to submit for review; please ensure you have at least 4 waypoints')
+        return
+      mission.state = 'AWAITING_REVIEW'
+      mission.sent_for_review = datetime.datetime.utcnow()
 
     # save
     mission.put()

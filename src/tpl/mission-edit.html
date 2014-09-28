@@ -72,7 +72,7 @@
 	</fieldset>
 
 	<p class="faded">To add more waypoints, save a draft. Empty waypoints will be ignored.</p>
-	<p><input type="submit" name="save" value="Save Draft"> <input type="submit" name="review" value="Send for Review" onclick="confirm('Are you sure you want to send your mission for review? You can\'t change it afterwards.')" disabled></p>
+	<p><input type="submit" name="save" value="Save Draft"> <input type="submit" name="review" value="Send for Review" onclick="confirm('Are you sure you want to send your mission for review? You can\'t change it afterwards.')"{% if mission.is_incomplete %} disabled{% endif %}></p>
 </form>
 {% endif %}
 {% endblock %}
