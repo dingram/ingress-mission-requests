@@ -14,8 +14,8 @@
 
 <h3>Waypoints</h3>
 
-{% if mission.objectives %}
-{% for obj in mission.objectives %}
+{% if mission.waypoints %}
+{% for obj in mission.waypoints %}
 <p>{{forloop.counter}}. <a href="https://www.ingress.com/intel/?ll={{obj.lat}},{{obj.lng}}&pll={{obj.lat}},{{obj.lng}}&z=17" target="_blank">{{obj.portal_title|default:'(Untitled portal)'}}</a><br>
 <strong>Mission:</strong> {{obj.type|default:'(No mission set)'}}
 {% if obj.location_clue %}<br><strong>Location clue:</strong> {{obj.location_clue}}{% endif %}
@@ -29,7 +29,7 @@
 {% endif %}
 
 <h3>Review status</h3>
-<p>{{mission.state}} as of {{mission.last_updated}} UTC</p>
+<p>{{mission.state}} as of {{mission.last_modified}} UTC</p>
 <p><br></p>
 <p>[<a href="/">Back home</a>]{% if USER.is_superadmin or USER.is_mission_creator %} [<a href="/queue">Back to the queue</a>]{% endif %}</p>
 {% endif %}
