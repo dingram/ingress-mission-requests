@@ -155,6 +155,10 @@ class MissionAuditLogEntry(ndb.Model):
   def drafted(cls, user):
     return cls.make_entry(actor=user, action='DRAFTED')
 
+  @classmethod
+  def sent_for_review(cls, user):
+    return cls.make_entry(actor=user, action='SENT_FOR_REVIEW')
+
 
 class MissionWaypoint(GuidModel):
   """Datastore representation of a mission waypoint."""

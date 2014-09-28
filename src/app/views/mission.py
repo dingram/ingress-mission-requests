@@ -238,6 +238,7 @@ class Update(RequestHandler):
         return
       mission.state = 'AWAITING_REVIEW'
       mission.sent_for_review = datetime.datetime.utcnow()
+      mission.audit_log.append(models.MissionAuditLogEntry.sent_for_review(owner))
 
     # save
     mission.put()
