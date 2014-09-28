@@ -229,7 +229,7 @@ class Mission(GuidModel):
     """
     if not self.title or not self.description or not self.type:
       return True
-    if len(waypoints) < 4:
+    if len(self.waypoints) < 4:
       return True
     return False
 
