@@ -2,6 +2,9 @@
 {% block meta %}
 <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
 {% endblock %}
+{% block css %}
+{% if mission and mission.owner_guid != USER.guid %}<link rel="stylesheet" href="/css/admin.css">{% endif %}
+{% endblock %}
 {% block html_imports %}
 <link rel="import" href="/polymer-src/paper-shadow/paper-shadow.html">
 {% endblock %}
