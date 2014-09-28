@@ -181,6 +181,17 @@ class MissionWaypoint(GuidModel):
   def lng(self):
     return float(self.lngE6) / 1e6
 
+  def map_url(self):
+    import motionless
+    m = motionless.DecoratedMap(350, 150, 'satellite')
+    m.add_marker(motionless.LatLonMarker(
+      float(self.latE6) / 1e6,
+      float(self.lngE6) / 1e6,
+      size='mid',
+      color='red',
+    ))
+    return m.generate_url()
+
 
 class Mission(GuidModel):
   """Datastore representation of a mission."""
@@ -236,5 +247,28 @@ class Mission(GuidModel):
     if len(self.waypoints) < 4:
       return True
     return False
+
+  def map_url_overview(self):
+    import motionless
+    m = motionless.DecoratedMap(600, 450, 'satellite', pathcolor='red')
+    num = 0
+    try:
+      for w in self.waypoints:
+        num += 1
+        m.add_marker(motionless.LatLonMarker(
+          float(w.latE6) / 1e6,
+          float(w.lngE6) / 1e6,
+          size='mid',
+          color='yellow' if num == 1 else 'red',
+          label=str(num % 10),
+        ))
+        m.add_path_latlon(
+          '%.06f' % (float(w.latE6) / 1e6),
+          '%.06f' % (float(w.lngE6) / 1e6),
+        )
+      return m.generate_url()
+    except:
+      logging.exception('Map failed to generate')
+      return ''
 
 # vim: et sw=2 ts=2 sts=2 cc=80

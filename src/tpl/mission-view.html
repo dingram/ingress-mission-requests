@@ -2,6 +2,9 @@
 {% block meta %}
 <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
 {% endblock %}
+{% block html_imports %}
+<link rel="import" href="/polymer-src/paper-shadow/paper-shadow.html">
+{% endblock %}
 {% block title %}Ingress Mission Requests: View mission{% endblock %}
 {% block pagetitle %}Ingress Mission Requests: View mission{% endblock %}
 {% block titleiconhref %}/{% if USER.is_superadmin or USER.is_mission_creator %}queue{% endif %}{% endblock %}
@@ -13,18 +16,28 @@
 <p>{% if mission.icon_url %}<img src="{{mission.icon_url}}">{% endif %} {{mission.type|default:'(No mission type set)'}}</p>
 {% if mission.description %}<p><strong>Description:</strong> {{mission.description}}</p>{% endif %}
 
+<h3>Overview</h3>
+
+<p><img src="{{mission.map_url_overview}}"></p>
+
 <h3>Waypoints</h3>
 
 {% if mission.waypoints %}
+<div layout horizontal wrap>
 {% for obj in mission.waypoints %}
-<p>{{forloop.counter}}. <a href="https://www.ingress.com/intel/?ll={{obj.lat}},{{obj.lng}}&pll={{obj.lat}},{{obj.lng}}&z=17" target="_blank">{{obj.portal_title|default:'(Untitled portal)'}}</a><br>
-<strong>Mission:</strong> {{obj.type|default:'(No mission set)'}}
-{% if obj.location_clue %}<br><strong>Location clue:</strong> {{obj.location_clue}}{% endif %}
-{% if obj.description %}<br><strong>Description:</strong> {{obj.description}}{% endif %}
-{% if obj.question %}<br><strong>Question:</strong> {{obj.question}}{% endif %}
-{% if obj.passphrase %}<br><strong>Answer:</strong> {{obj.passphrase}}{% endif %}
-</p>
+<div class="waypoint-card" relative>
+	<paper-shadow z="1"></paper-shadow>
+	<a href="https://www.ingress.com/intel/?ll={{obj.lat}},{{obj.lng}}&pll={{obj.lat}},{{obj.lng}}&z=17" target="_blank"><img src="{{obj.map_url}}" width="350" height="150"></a>
+	<p>{{forloop.counter}}. <a href="https://www.ingress.com/intel/?ll={{obj.lat}},{{obj.lng}}&pll={{obj.lat}},{{obj.lng}}&z=17" target="_blank">{{obj.portal_title|default:'(Untitled portal)'}}</a><br>
+	<strong>Mission:</strong> {{obj.type|default:'(No mission set)'}}
+	{% if obj.location_clue %}<br><strong>Location clue:</strong> {{obj.location_clue}}{% endif %}
+	{% if obj.description %}<br><strong>Description:</strong> {{obj.description}}{% endif %}
+	{% if obj.question %}<br><strong>Question:</strong> {{obj.question}}{% endif %}
+	{% if obj.passphrase %}<br><strong>Answer:</strong> {{obj.passphrase}}{% endif %}
+	</p>
+</div>
 {% endfor %}
+</div>
 {% else %}
 <p>No waypoints set!</p>
 {% endif %}
