@@ -7,13 +7,13 @@
 {% block meta %}
 <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
 {% endblock %}
+{% block title %}Ingress Mission Requests: Propose mission{% endblock %}
+{% block pagetitle %}Ingress Mission Requests: Propose mission{% endblock %}
 {% block bodycontent %}
-<h1>Ingress Mission Requests: Propose Mission</h1>
 {% if not mission %}
-<p>Mission not found. Go <a href="/">back to the list</a>.</p>
+<p>Mission not found.</p>
 {% else %}
 {% if error %}<p style="color: #c00"><strong>ERROR:</strong> {{error}}</p>{% endif %}
-<p>[<a href="/">Back to the list</a>]</p>
 <form action="/missions/{{mission.guid}}/update" method="POST">
 	<input type="hidden" name="{{XSRF_NAME}}" value="{{XSRF_TOKEN}}">
 

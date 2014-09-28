@@ -2,18 +2,26 @@
 {% block meta %}
 <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
 {% endblock %}
+{% block html_imports %}
+<link rel="import" href="/polymer-src/paper-button/paper-button.html">
+{% endblock %}
+{% block titleicon %}{% endblock %}
 {% block bodycontent %}
-<h1>Ingress Mission Requests</h1>
-<p>Somewhere for you to request missions to be created on your behalf.</p>
 {% if not logged_in %}
-<p>Looks like you need to <a href="/login">log in</a> first.</p>
-{% else %}{% if not USER %}
-<p>Looks like you need to <a href="/signup">sign up</a>.</p>
+	<p>This is somewhere for you to request Ingress missions to be created for you.</p>
+	<p>Looks like you're not logged in, so you can't do a lot here.</p>
+	<p><a href="/login" class="btn"><paper-button raisedButton>Log in</paper-button></a></p>
 {% else %}
-{% if not drafts and not review_queue %}
-<p>Welcome, {{USER.nickname}}. To get started, <a href="/missions/create">propose a new mission</a>, or you can <a href="/signup">update your details</a>.</p>
+{% if not USER %}
+<p>This is somewhere for you to request Ingress missions to be created for you.</p>
+<p>Looks like you're logged in, but not registered. Let's fix that:</p>
+<p><a href="/signup" class="btn"><paper-button raisedButton>Sign up</paper-button></a></p>
 {% else %}
+{% if USER.is_superadmin or not USER.is_mission_creator %}
 <p>Welcome, {{USER.nickname}}.</p>
+{% if not drafts and not review_queue %}
+<p>It's time to get started!</p>
+{% else %}
 
 {% if not drafts %}
 <p>You have no draft missions right now.</p>
@@ -21,7 +29,7 @@
 <p>Your draft missions:</p>
 <ul>
 {% for m in drafts %}
-	<li><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a>, last modified at {{m.last_modified|default:'[unknown]'}} UTC</li>
+<li><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a>, last modified at {{m.last_modified|default:'[unknown]'}} UTC</li>
 {% endfor %}
 </ul>
 {% endif %}
@@ -32,13 +40,18 @@
 <p>Your missions in the review queue:</p>
 <ul>
 {% for m in review_queue %}
-	<li><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></li>
+<li><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></li>
 {% endfor %}
 </ul>
 {% endif %}
 
-<p>[<a href="/missions/create">Propose a new mission</a>] [<a href="/signup">Update your details</a>]{% if USER.is_superadmin or USER.is_mission_creator %} [<a href="/queue">View the queue</a>]{% endif %}</p>
+{% endif %}
+<p><a href="/missions/create"><paper-button raisedButton>Propose a new mission</paper-button></a> <a href="/signup"><paper-button>Update your details</paper-button></a>{% if USER.is_superadmin or USER.is_mission_creator %} <a href="/queue"><paper-button class="admin">View the queue</paper-button></a>{% endif %}</p>
+{% else %}
+<p>Welcome, {{USER.nickname}}. You have the power to create missions.</p>
+<p><a href="/queue"><paper-button raisedButton class="admin">View the queue</paper-button></a> <a href="/signup"><paper-button>Update your details</paper-button></a></p>
+{% endif %}
 {% endif %}
 
-{% endif %}{% endif %}
+{% endif %}
 {% endblock %}

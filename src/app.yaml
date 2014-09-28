@@ -46,6 +46,12 @@ handlers:
   login: optional
   expiration: 7d
 
+- url: /polymer-src
+  static_dir: assets/bower_components
+  secure: optional
+  login: optional
+  expiration: 7d
+
 #- url: /ttf
 #  static_dir: assets/ttf
 #  secure: optional

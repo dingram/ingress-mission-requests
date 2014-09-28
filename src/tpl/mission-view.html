@@ -2,10 +2,11 @@
 {% block meta %}
 <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
 {% endblock %}
+{% block title %}Ingress Mission Requests: View mission{% endblock %}
+{% block pagetitle %}Ingress Mission Requests: View mission{% endblock %}
 {% block bodycontent %}
-<h1>Ingress Mission Requests: View Mission</h1>
 {% if not mission %}
-<p>Mission not found. Go <a href="/">back home</a>.</p>
+<p>Mission not found.</p>
 {% else %}
 <h2>{{mission.title|default:'(Untitled mission)'}}</h2>
 <p>{% if mission.icon_url %}<img src="{{mission.icon_url}}">{% endif %} {{mission.type|default:'(No mission type set)'}}</p>

@@ -1,10 +1,14 @@
 {% extends '_base.html' %}
+{% block css %}
+<link rel="stylesheet" href="/css/admin.css">
+{% endblock %}
 {% block meta %}
 <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
 {% endblock %}
+{% block title %}Ingress Mission Request Queue{% endblock %}
+{% block pagetitle %}Ingress Mission Request Queue{% endblock %}
 {% block bodycontent %}
-<h1>Ingress Mission Requests Queue</h1>
-<p>Welcome to the queue, {{USER.nickname}}. [<a href="/">Back home</a>]</p>
+<p>Welcome to the queue, {{USER.nickname}}.</p>
 
 {% if cursor_token %}<p><a href="/queue?start={{cursor_token}}">Next &gt;</a></p>{% endif %}
 <table>

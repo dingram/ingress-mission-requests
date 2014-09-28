@@ -1,0 +1,45 @@
+html, body {
+	font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+}
+#content {
+	margin: 16px;
+}
+#content p {
+	margin: 0 0 1.3em;
+	line-height: 1.3em;
+}
+a.btn {
+	color: currentColor;
+}
+
+core-toolbar {
+	background: #9c27b0; /* purple 500 */
+	color: #fafafa; /* grey 50 */
+}
+paper-button {
+	color: #7b1fa2; /* purple 700 */
+}
+paper-button[raisedButton] {
+	background: #ba68c8; /* purple 300 */
+	color: #fff;
+}
+paper-button::shadow #ripple {
+	color: #9c27b0; /* purple 500 */
+}
+paper-button[raisedButton]::shadow #ripple {
+	color: #7b1fa2; /* purple 700 */
+}
+
+paper-button.admin {
+	color: #5d4037; /* brown 700 */
+}
+paper-button.admin[raisedButton] {
+	background: #a1887f; /* brown 300 */
+	color: #fff;
+}
+paper-button.admin::shadow #ripple {
+	color: #795548; /* brown 500 */
+}
+paper-button.admin[raisedButton]::shadow #ripple {
+	color: #5d4037; /* brown 700 */
+}

@@ -1,0 +1,17 @@
+core-toolbar {
+	background: #795548; /* brown 500 */
+	color: #fafafa; /* grey 50 */
+}
+paper-button {
+	color: #5d4037; /* brown 700 */
+}
+paper-button[raisedButton] {
+	background: #a1887f; /* brown 300 */
+	color: #fff;
+}
+paper-button::shadow #ripple {
+	color: #795548; /* brown 500 */
+}
+paper-button[raisedButton]::shadow #ripple {
+	color: #5d4037; /* brown 700 */
+}
