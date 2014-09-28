@@ -20,6 +20,12 @@ a.btn {
 .waypoint-card img {
 	display: block;
 }
+#content .waypoint-card p {
+	margin: 0;
+}
+.waypoint-card-content {
+	margin: 8px;
+}
 
 core-toolbar {
 	background: #9c27b0; /* purple 500 */

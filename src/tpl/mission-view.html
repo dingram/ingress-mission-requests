@@ -31,6 +31,7 @@
 <div class="waypoint-card" relative>
 	<paper-shadow z="1"></paper-shadow>
 	<a href="https://www.ingress.com/intel/?ll={{obj.lat}},{{obj.lng}}&pll={{obj.lat}},{{obj.lng}}&z=17" target="_blank"><img src="{{obj.map_url}}" width="350" height="150"></a>
+	<div class="waypoint-card-content">
 	<p>{{forloop.counter}}. <a href="https://www.ingress.com/intel/?ll={{obj.lat}},{{obj.lng}}&pll={{obj.lat}},{{obj.lng}}&z=17" target="_blank">{{obj.portal_title|default:'(Untitled portal)'}}</a><br>
 	<strong>Mission:</strong> {{obj.type|default:'(No mission set)'}}
 	{% if obj.location_clue %}<br><strong>Location clue:</strong> {{obj.location_clue}}{% endif %}
@@ -38,6 +39,7 @@
 	{% if obj.question %}<br><strong>Question:</strong> {{obj.question}}{% endif %}
 	{% if obj.passphrase %}<br><strong>Answer:</strong> {{obj.passphrase}}{% endif %}
 	</p>
+	</div>
 </div>
 {% endfor %}
 </div>
