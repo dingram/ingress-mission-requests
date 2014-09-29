@@ -299,27 +299,27 @@ class Mission(GuidModel):
 
   def status_color(self):
     if self.state == 'DRAFT':
-      return '#000000'
+      return '#616161' # grey 700
     elif self.state == 'AWAITING_REVIEW':
-      return '#000000'
+      return '#212121' # grey 900
     elif self.state == 'UNDER_REVIEW':
-      return '#000000'
+      return '#ffb74d' # orange 300
     elif self.state == 'ACCEPTED':
-      return '#000000'
+      return '#259b24' # green 500
     elif self.state == 'NEEDS_REVISION':
-      return '#000000'
+      return '#ff9800' # orange 500
     elif self.state == 'REJECTED':
-      return '#000000'
+      return '#e51c23' # red 500
     elif self.state == 'CREATING':
-      return '#000000'
+      return '#7986cb' # indigo 300
     elif self.state == 'CREATED':
-      return '#000000'
+      return '#3f51b5' # indigo 500
     elif self.state == 'PUBLISHED':
-      return '#000000'
+      return '#009688' # teal 500
     elif self.state == 'DEPUBLISHED':
-      return '#000000'
+      return '#f36c60' # red 300
     else:
-      return '#000000'
+      return '#b0120a' # red 900
 
   def is_incomplete(self):
     """Return whether this mission is definitely incomplete (i.e. not eligible
