@@ -59,6 +59,11 @@ class View(RequestHandler):
       self.abort_not_found()
       return
 
+    if self.user.guid == mission.owner_guid:
+      # Cannot process your own missions
+      self.redirect('/missions/%s' % mission.guid, abort=True, code=303)
+      return
+
     if mission.state == 'AWAITING_REVIEW' or mission.state == 'NEEDS_REVISION':
       if 'state_start_review' in self.request.POST:
         mission.state = 'UNDER_REVIEW'

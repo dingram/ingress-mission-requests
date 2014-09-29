@@ -18,6 +18,7 @@
 {% else %}
 <h2>{{mission.title|default:'(Untitled mission)'}}</h2>
 
+{% if mission.owner_guid != USER.guid %}
 <form action="" method="POST">
 {% if mission.state == 'AWAITING_REVIEW' or mission.state == 'NEEDS_REVISION' %}<p><input type="submit" name="state_start_review" value="Start review"></p>{% endif %}
 {% if mission.state == 'UNDER_REVIEW' %}<p><input type="submit" name="state_accept" value="Accept"><br>
@@ -30,6 +31,7 @@
 {% if mission.state == 'CREATING' %}<p><input type="submit" name="state_finish_creation" value="Finish creating mission"></p>{% endif %}
 {% if mission.state == 'CREATED' %}<p><input type="submit" name="state_publish" value="Publish mission"></p>{% endif %}
 </form>
+{% endif %}
 
 <table class="mission-info">
 	<tr><th>Mission state:</th><td><core-icon icon="{{mission.status_icon}}" style="color: {{mission.status_color}}"></core-icon> {{mission.state}}</td></tr>
