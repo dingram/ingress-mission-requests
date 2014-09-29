@@ -26,6 +26,17 @@ a.btn {
 .waypoint-card-content {
 	margin: 8px;
 }
+.mission-info {
+	width: 100%;
+	border-collapse: collapse;
+}
+.mission-info th {
+	text-align: left;
+	width: 120px;
+}
+.mission-info th, .mission-info td {
+	padding: 4px;
+}
 
 core-toolbar {
 	background: #9c27b0; /* purple 500 */

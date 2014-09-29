@@ -16,8 +16,16 @@
 <p>Mission not found.</p>
 {% else %}
 <h2>{{mission.title|default:'(Untitled mission)'}}</h2>
-<p>{% if mission.icon_url %}<img src="{{mission.icon_url}}">{% endif %} {{mission.type|default:'(No mission type set)'}}</p>
-{% if mission.description %}<p><strong>Description:</strong> {{mission.description}}</p>{% endif %}
+<table class="mission-info">
+	<tr><th>Mission state:</th><td>{{mission.state}}</td></tr>
+	<tr><th>Last modified:</th><td>{{mission.last_modified}} UTC ({{mission.last_modified|timesince}} ago)</td></tr>
+	<tr><th>Mission type:</th><td>{{mission.type|default:'(No mission type set)'}}</td></tr>
+	{% if mission.icon_url %}<tr><th>Icon:</th><td><img src="{{mission.icon_url}}" height="256"></td></tr>{% endif %}
+	{% if mission.description %}
+	<tr><th colspan="2">Description:</th><tr>
+	<tr><td colspan="2">{{mission.description}}</td></tr>
+	{% endif %}
+</table>
 
 <h3>Overview</h3>
 
@@ -47,7 +55,16 @@
 <p>No waypoints set!</p>
 {% endif %}
 
-<h3>Review status</h3>
-<p>{{mission.state}} as of {{mission.last_modified}} UTC</p>
+<h3>Review log</h3>
+<table class="review-log">
+	<thead>
+		<tr><th>Date</th><th>Agent</td><td>Action</td></tr>
+	</thead>
+	<tbody>
+{% for log in mission.audit_log %}
+<tr><td>{{log.created}} UTC</td><td>{{log.actor_nickname}}</td><td>{{log.action}}{% if log.action_detail %}: {{log.action_detail}}{% endif %}</td></tr>
+{% endfor %}
+	</tbody>
+</table>
 {% endif %}
 {% endblock %}
