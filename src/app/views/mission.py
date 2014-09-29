@@ -97,7 +97,12 @@ class View(RequestHandler):
 
     if mission.state == 'REJECTED':
       if 'state_revision' in self.request.POST and self.request.POST.get('revision_reason', '').strip():
-        pass
+        reason = self.request.POST.get('revision_reason', '').strip()
+        mission.state = 'NEEDS_REVISION'
+        mission.finished_review = datetime.datetime.utcnow()
+        mission.rejection_reason = reason
+        mission.audit_log.append(models.MissionAuditLogEntry.needs_revision(self.user, reason))
+        mission.put()
       elif 'state_reset_review' in self.request.POST:
         mission.state = 'UNDER_REVIEW'
         mission.started_review = None
