@@ -134,7 +134,7 @@ class User(GuidModel):
 
 class MissionAuditLogEntry(ndb.Model):
   """Datastore representation of an action log entry."""
-  created = ndb.DateTimeProperty(indexed=False, auto_now_add=True)
+  created_at = ndb.DateTimeProperty(indexed=False, auto_now_add=True)
   action = ndb.StringProperty(indexed=False)
   action_detail = ndb.StringProperty(indexed=False)
 
@@ -145,7 +145,7 @@ class MissionAuditLogEntry(ndb.Model):
   @classmethod
   def make_entry(cls, actor, action, action_detail=None):
     return cls(
-        created=datetime.datetime.utcnow(),
+        created_at=datetime.datetime.utcnow(),
         action=action,
         action_detail=action_detail,
         actor_guid=actor.guid,

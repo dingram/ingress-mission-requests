@@ -76,7 +76,7 @@
 	</thead>
 	<tbody>
 {% for log in mission.audit_log %}
-<tr><td>{{log.created}} UTC</td><td>{{log.actor_nickname}}</td><td>{{log.action}}{% if log.action_detail %}: {{log.action_detail}}{% endif %}</td></tr>
+<tr><td>{{log.created_at}} UTC</td><td>{{log.actor_nickname}}</td><td>{{log.action}}{% if log.action_detail %}: {{log.action_detail}}{% endif %}</td></tr>
 {% endfor %}
 	</tbody>
 </table>
