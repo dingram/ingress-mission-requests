@@ -268,8 +268,15 @@ class Queue(RequestHandler):
     q = q.order(-models.Mission.last_modified)
     missions, next_cursor, more = (q.fetch_page(50, start_cursor=cursor))
 
+    q = models.Mission.query(ndb.OR(
+      models.Mission.reviewer_guid == self.user.guid,
+      models.Mission.publisher_guid == self.user.guid,
+    )).order(-models.Mission.last_modified)
+    my_missions = q.fetch(50)
+
     self.render_page('queue-view.html', {
       'unfiltered': unfiltered,
+      'my_missions': my_missions,
       'missions': missions,
       'cursor_token': next_cursor.urlsafe() if next_cursor and more else None,
     })
