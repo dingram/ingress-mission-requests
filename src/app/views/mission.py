@@ -2,6 +2,7 @@ import datetime
 import logging
 import re
 
+from google.appengine.api import mail
 from google.appengine.ext import ndb
 
 from app.data import enums
@@ -80,6 +81,12 @@ class View(RequestHandler):
         mission.finished_review = datetime.datetime.utcnow()
         mission.audit_log.append(models.MissionAuditLogEntry.accepted(self.user))
         mission.put()
+        mail.send_mail(
+            sender='Ingress Mission Requests <updates+%s@ingress-mission-requests.appspotmail.com>' % mission.guid,
+            to='Agent %s <%s>' % (mission.owner_nickname, mission.owner_email),
+            subject='Mission accepted: %s' % mission.title,
+            body='Your mission "%s" has been accepted by our reviewers. You will be emailed again when it has been published.' % mission.title,
+        )
       elif 'state_revision' in self.request.POST and self.request.POST.get('revision_reason', '').strip():
         reason = self.request.POST.get('revision_reason', '').strip()
         mission.state = 'NEEDS_REVISION'
@@ -87,6 +94,12 @@ class View(RequestHandler):
         mission.rejection_reason = reason
         mission.audit_log.append(models.MissionAuditLogEntry.needs_revision(self.user, reason))
         mission.put()
+        mail.send_mail(
+            sender='Ingress Mission Requests <updates+%s@ingress-mission-requests.appspotmail.com>' % mission.guid,
+            to='Agent %s <%s>' % (mission.owner_nickname, mission.owner_email),
+            subject='Mission needs revision: %s' % mission.title,
+            body='Your mission "%s" has been reviewed and needs some changes:\n\n%s\n\nPlease update your mission and submit for review again.' % (mission.title, mission.rejection_reason),
+        )
       elif 'state_reject' in self.request.POST and self.request.POST.get('rejection_reason', '').strip():
         reason = self.request.POST.get('rejection_reason', '').strip()
         mission.state = 'REJECTED'
@@ -94,6 +107,12 @@ class View(RequestHandler):
         mission.rejection_reason = reason
         mission.audit_log.append(models.MissionAuditLogEntry.rejected(self.user, reason))
         mission.put()
+        mail.send_mail(
+            sender='Ingress Mission Requests <updates+%s@ingress-mission-requests.appspotmail.com>' % mission.guid,
+            to='Agent %s <%s>' % (mission.owner_nickname, mission.owner_email),
+            subject='Mission rejected: %s' % mission.title,
+            body='Your mission "%s" has been rejected by our reviewers:\n\n%s\n\nThanks for your enthusiasm, and we look forward to whatever new missions you request in future.' % (mission.title, mission.rejection_reason),
+        )
       elif 'state_reset_review' in self.request.POST:
         mission.state = 'UNDER_REVIEW'
         mission.started_review = None
@@ -108,6 +127,12 @@ class View(RequestHandler):
         mission.rejection_reason = reason
         mission.audit_log.append(models.MissionAuditLogEntry.needs_revision(self.user, reason))
         mission.put()
+        mail.send_mail(
+            sender='Ingress Mission Requests <updates+%s@ingress-mission-requests.appspotmail.com>' % mission.guid,
+            to='Agent %s <%s>' % (mission.owner_nickname, mission.owner_email),
+            subject='Mission needs revision: %s' % mission.title,
+            body='Your mission "%s" has been reviewed and needs some changes:\n\n%s\n\nPlease update your mission and submit for review again.' % (mission.title, mission.rejection_reason),
+        )
       elif 'state_reset_review' in self.request.POST:
         mission.state = 'UNDER_REVIEW'
         mission.started_review = None
@@ -137,6 +162,12 @@ class View(RequestHandler):
         mission.publisher_faction = self.user.faction
         mission.audit_log.append(models.MissionAuditLogEntry.published(self.user))
         mission.put()
+        mail.send_mail(
+            sender='Ingress Mission Requests <updates+%s@ingress-mission-requests.appspotmail.com>' % mission.guid,
+            to='Agent %s <%s>' % (mission.owner_nickname, mission.owner_email),
+            subject='Mission published: %s' % mission.title,
+            body='Your mission "%s" has been created, and should now be playable. Thanks for submitting it!' % mission.title,
+        )
 
     self.redirect('/missions/%s' % mission.guid, abort=True, code=303)
 
