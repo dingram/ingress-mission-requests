@@ -20,7 +20,7 @@
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>Owner</th>
+			<th>Author</th>
 			<th>Last modified</th>
 			<th>State</th>
 		</tr>
@@ -29,7 +29,7 @@
 {% for m in my_missions %}
 		<tr>
 			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
-			<td>{{m.owner_nickname}}</td>
+			<td class="faction-{{m.owner_faction}}">{{m.owner_nickname}}</td>
 			<td>{{m.last_modified}} UTC</td>
 			<td><core-icon icon="{{m.status_icon}}" style="color: {{m.status_color}}"></core-icon> {{m.state}}</td>
 		</tr>
@@ -44,7 +44,7 @@
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>Owner</th>
+			<th>Author</th>
 			<th>Last modified</th>
 			{% if unfiltered %}<th>State</th>{% endif %}
 			{% if unfiltered %}<th>Ready for review?</th>{% endif %}
@@ -54,10 +54,10 @@
 {% for m in missions %}
 		<tr>
 			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
-			<td>{{m.owner_nickname}}</td>
+			<td class="faction-{{m.owner_faction}}">{{m.owner_nickname}}</td>
 			<td>{{m.last_modified}} UTC</td>
 			{% if unfiltered %}<td><core-icon icon="{{m.status_icon}}" style="color: {{m.status_color}}"></core-icon> {{m.state}}</td>{% endif %}
-			{% if unfiltered %}<td>{% if m.is_incomplete %}Definitely NOT!{% else %}{% if m.state == 'DRAFT' %}Maybe.{% else %}Yes.{% endif %}{% endif %}</a></td>{% endif %}
+			{% if unfiltered %}<td style="text-align: center">{% if m.is_incomplete %}<core-icon icon="cancel" style="color:#b0120a"></core-icon>{% else %}{% if m.state == 'DRAFT' %}<core-icon icon="check-circle-blank" style="color:#616161"></core-icon>{% else %}<core-icon icon="check-circle-outline" style="color:#42bd41"></core-icon>{% endif %}{% endif %}</a></td>{% endif %}
 		</tr>
 {% endfor %}
 </table>
