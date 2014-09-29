@@ -9,7 +9,7 @@
 <link rel="import" href="/polymer-src/paper-shadow/paper-shadow.html">
 {% endblock %}
 {% block title %}Ingress Mission Requests: View mission{% endblock %}
-{% block pagetitle %}Ingress Mission Requests: View mission{% endblock %}
+{% block pagetitle %}Mission details{% endblock %}
 {% block titleiconhref %}/{% if USER.is_superadmin or USER.is_mission_creator %}queue{% endif %}{% endblock %}
 {% block bodycontent %}
 {% if not mission %}
