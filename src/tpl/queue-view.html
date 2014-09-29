@@ -39,7 +39,7 @@
 <h2>The full queue</h2>
 {% endif %}
 
-{% if cursor_token %}<p><a href="/queue?start={{cursor_token}}">Next &gt;</a></p>{% endif %}
+{% if cursor_token %}<p><a href="/queue?{% if unfiltered %}unfiltered&amp;{% endif %}start={{cursor_token}}">Next &gt;</a></p>{% endif %}
 <table>
 	<thead>
 		<tr>
@@ -61,7 +61,7 @@
 		</tr>
 {% endfor %}
 </table>
-{% if cursor_token %}<p><a href="/queue?start={{cursor_token}}">Next &gt;</a></p>{% endif %}
+{% if cursor_token %}<p><a href="/queue?{% if unfiltered %}unfiltered&amp;{% endif %}start={{cursor_token}}">Next &gt;</a></p>{% endif %}
 
 <p style="margin-top: 20px"><a href="/queue{% if not unfiltered %}?unfiltered{% endif %}"><paper-button>View {% if not unfiltered %}raw{% else %}ready-to-review{% endif%} queue</paper-button></a></p>
 
