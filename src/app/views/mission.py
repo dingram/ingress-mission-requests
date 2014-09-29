@@ -37,7 +37,7 @@ class View(RequestHandler):
       return
 
     template = 'mission-view.html'
-    if (mission.state == 'DRAFT' and is_owner) or self.user.is_superadmin:
+    if (mission.state in ('DRAFT', 'NEEDS_REVISION') and is_owner) or self.user.is_superadmin:
       template = 'mission-edit.html'
 
       # Add some empty waypoints to keep things interesting
@@ -153,7 +153,7 @@ class Update(RequestHandler):
       self.redirect('/missions/%s' % mission.guid, abort=True, code=303)
       return
 
-    if mission.state != 'DRAFT' and not self.user.is_superadmin:
+    if mission.state not in ('DRAFT', 'NEEDS_REVISION') and not self.user.is_superadmin:
       # Cannot edit a submitted mission; just redirect back
       self.redirect('/missions/%s' % mission.guid, abort=True, code=303)
       return
