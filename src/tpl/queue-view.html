@@ -6,6 +6,7 @@
 <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
 {% endblock %}
 {% block html_imports %}
+<link rel="import" href="/polymer-src/core-icon/core-icon.html">
 <link rel="import" href="/polymer-src/paper-button/paper-button.html">
 {% endblock %}
 {% block title %}Ingress Mission Request Queue{% endblock %}
@@ -30,7 +31,7 @@
 			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
 			<td>{{m.owner_nickname}}</td>
 			<td>{{m.last_modified}} UTC</td>
-			<td>{{m.state}}</td>
+			<td><core-icon icon="{{m.status_icon}}" style="color: {{m.status_color}}"></core-icon> {{m.state}}</td>
 		</tr>
 {% endfor %}
 </table>

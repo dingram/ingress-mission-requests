@@ -6,6 +6,7 @@
 {% if mission and mission.owner_guid != USER.guid %}<link rel="stylesheet" href="/css/admin.css">{% endif %}
 {% endblock %}
 {% block html_imports %}
+<link rel="import" href="/polymer-src/core-icon/core-icon.html">
 <link rel="import" href="/polymer-src/paper-shadow/paper-shadow.html">
 {% endblock %}
 {% block title %}Ingress Mission Requests: View mission{% endblock %}
@@ -31,7 +32,7 @@
 </form>
 
 <table class="mission-info">
-	<tr><th>Mission state:</th><td>{{mission.state}}</td></tr>
+	<tr><th>Mission state:</th><td><core-icon icon="{{mission.status_icon}}" style="color: {{mission.status_color}}"></core-icon> {{mission.state}}</td></tr>
 	<tr><th>Last modified:</th><td>{{mission.last_modified}} UTC ({{mission.last_modified|timesince}} ago)</td></tr>
 	<tr><th>Mission type:</th><td>{{mission.type|default:'(No mission type set)'}}</td></tr>
 	{% if mission.icon_url %}<tr><th>Icon:</th><td><a href="{{mission.icon_url}}" target="_blank"><img src="{{mission.icon_url}}" height="256"></a></td></tr>{% endif %}

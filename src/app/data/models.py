@@ -273,6 +273,54 @@ class Mission(GuidModel):
     m.audit_log.append(MissionAuditLogEntry.drafted(owner))
     return m
 
+  def status_icon(self):
+    if self.state == 'DRAFT':
+      return 'create'
+    elif self.state == 'AWAITING_REVIEW':
+      return 'cloud-queue'
+    elif self.state == 'UNDER_REVIEW':
+      return 'assignment'
+    elif self.state == 'ACCEPTED':
+      return 'thumb-up'
+    elif self.state == 'NEEDS_REVISION':
+      return 'assignment-return'
+    elif self.state == 'REJECTED':
+      return 'thumb-down'
+    elif self.state == 'CREATING':
+      return 'cached'
+    elif self.state == 'CREATED':
+      return 'check-circle'
+    elif self.state == 'PUBLISHED':
+      return 'visibility'
+    elif self.state == 'DEPUBLISHED':
+      return 'visibility-off'
+    else:
+      return 'error'
+
+  def status_color(self):
+    if self.state == 'DRAFT':
+      return '#000000'
+    elif self.state == 'AWAITING_REVIEW':
+      return '#000000'
+    elif self.state == 'UNDER_REVIEW':
+      return '#000000'
+    elif self.state == 'ACCEPTED':
+      return '#000000'
+    elif self.state == 'NEEDS_REVISION':
+      return '#000000'
+    elif self.state == 'REJECTED':
+      return '#000000'
+    elif self.state == 'CREATING':
+      return '#000000'
+    elif self.state == 'CREATED':
+      return '#000000'
+    elif self.state == 'PUBLISHED':
+      return '#000000'
+    elif self.state == 'DEPUBLISHED':
+      return '#000000'
+    else:
+      return '#000000'
+
   def is_incomplete(self):
     """Return whether this mission is definitely incomplete (i.e. not eligible
     to be published).
