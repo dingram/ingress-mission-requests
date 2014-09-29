@@ -147,6 +147,7 @@ class MissionAuditLogEntry(ndb.Model):
     return cls(
         created=datetime.datetime.utcnow(),
         action=action,
+        action_detail=action_detail,
         actor_guid=actor.guid,
         actor_nickname=actor.nickname,
         actor_faction=actor.faction,
@@ -159,6 +160,39 @@ class MissionAuditLogEntry(ndb.Model):
   @classmethod
   def sent_for_review(cls, user):
     return cls.make_entry(actor=user, action='SENT_FOR_REVIEW')
+
+  @classmethod
+  def being_reviewed(cls, user):
+    return cls.make_entry(actor=user, action='BEING_REVIEWED')
+
+  @classmethod
+  def accepted(cls, user):
+    return cls.make_entry(actor=user, action='ACCEPTED')
+
+  @classmethod
+  def needs_revision(cls, user, details):
+    return cls.make_entry(actor=user, action='NEEDS_REVISION',
+        action_detail=details)
+
+  @classmethod
+  def rejected(cls, user, details):
+    return cls.make_entry(actor=user, action='REJECTED', action_detail=details)
+
+  @classmethod
+  def being_created(cls, user):
+    return cls.make_entry(actor=user, action='BEING_CREATED')
+
+  @classmethod
+  def created(cls, user):
+    return cls.make_entry(actor=user, action='CREATED')
+
+  @classmethod
+  def published(cls, user):
+    return cls.make_entry(actor=user, action='PUBLISHED')
+
+  @classmethod
+  def re_sent_for_review(cls, user):
+    return cls.make_entry(actor=user, action='RE_SENT_FOR_REVIEW')
 
 
 class MissionWaypoint(GuidModel):
