@@ -56,7 +56,7 @@
 			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
 			<td>{{m.owner_nickname}}</td>
 			<td>{{m.last_modified}} UTC</td>
-			{% if unfiltered %}<td>{{m.state}}</td>{% endif %}
+			{% if unfiltered %}<td><core-icon icon="{{m.status_icon}}" style="color: {{m.status_color}}"></core-icon> {{m.state}}</td>{% endif %}
 			{% if unfiltered %}<td>{% if m.is_incomplete %}Definitely NOT!{% else %}{% if m.state == 'DRAFT' %}Maybe.{% else %}Yes.{% endif %}{% endif %}</a></td>{% endif %}
 		</tr>
 {% endfor %}
