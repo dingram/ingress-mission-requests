@@ -145,6 +145,7 @@ class MissionAuditLogEntry(ndb.Model):
   @classmethod
   def make_entry(cls, actor, action, action_detail=None):
     return cls(
+        created=datetime.datetime.utcnow(),
         action=action,
         actor_guid=actor.guid,
         actor_nickname=actor.nickname,
