@@ -49,6 +49,87 @@ class View(RequestHandler):
       'error': self.request.GET.get('error'),
     })
 
+  def post(self, *args, **kwargs):
+    if not self.user or not (self.user.is_mission_creator or self.user.is_superadmin):
+      self.redirect('/')
+      return
+
+    mission = models.Mission.fetch_by_guid(self.request.route_kwargs['guid'])
+    if not mission:
+      self.abort_not_found()
+      return
+
+    if mission.state == 'AWAITING_REVIEW' or mission.state == 'NEEDS_REVISION':
+      if 'state_start_review' in self.request.POST:
+        mission.state = 'UNDER_REVIEW'
+        mission.started_review = datetime.datetime.utcnow()
+        mission.reviewer_guid = self.user.guid
+        mission.reviewer_nickname = self.user.nickname
+        mission.reviewer_faction = self.user.faction
+        mission.audit_log.append(models.MissionAuditLogEntry.being_reviewed(self.user))
+        mission.put()
+
+    if mission.state == 'UNDER_REVIEW':
+      if 'state_accept' in self.request.POST:
+        mission.state = 'ACCEPTED'
+        mission.finished_review = datetime.datetime.utcnow()
+        mission.audit_log.append(models.MissionAuditLogEntry.accepted(self.user))
+        mission.put()
+      elif 'state_revision' in self.request.POST and self.request.POST.get('revision_reason', '').strip():
+        reason = self.request.POST.get('revision_reason', '').strip()
+        mission.state = 'NEEDS_REVISION'
+        mission.finished_review = datetime.datetime.utcnow()
+        mission.rejection_reason = reason
+        mission.audit_log.append(models.MissionAuditLogEntry.needs_revision(self.user, reason))
+        mission.put()
+      elif 'state_reject' in self.request.POST and self.request.POST.get('rejection_reason', '').strip():
+        reason = self.request.POST.get('rejection_reason', '').strip()
+        mission.state = 'REJECTED'
+        mission.finished_review = datetime.datetime.utcnow()
+        mission.rejection_reason = reason
+        mission.audit_log.append(models.MissionAuditLogEntry.rejected(self.user, reason))
+        mission.put()
+      elif 'state_reset_review' in self.request.POST:
+        mission.state = 'UNDER_REVIEW'
+        mission.started_review = None
+        mission.audit_log.append(models.MissionAuditLogEntry.re_sent_for_review(self.user))
+        mission.put()
+
+    if mission.state == 'REJECTED':
+      if 'state_revision' in self.request.POST and self.request.POST.get('revision_reason', '').strip():
+        pass
+      elif 'state_reset_review' in self.request.POST:
+        mission.state = 'UNDER_REVIEW'
+        mission.started_review = None
+        mission.audit_log.append(models.MissionAuditLogEntry.re_sent_for_review(self.user))
+        mission.put()
+
+    if mission.state == 'ACCEPTED':
+      if 'state_start_creation' in self.request.POST:
+        mission.state = 'CREATING'
+        mission.mission_creation_began = datetime.datetime.utcnow()
+        mission.audit_log.append(models.MissionAuditLogEntry.being_created(self.user))
+        mission.put()
+
+    if mission.state == 'CREATING':
+      if 'state_finish_creation' in self.request.POST:
+        mission.state = 'CREATED'
+        mission.mission_creation_complete = datetime.datetime.utcnow()
+        mission.audit_log.append(models.MissionAuditLogEntry.created(self.user))
+        mission.put()
+
+    if mission.state == 'CREATED':
+      if 'state_publish' in self.request.POST:
+        mission.state = 'PUBLISHED'
+        mission.mission_published = datetime.datetime.utcnow()
+        mission.publisher_guid = self.user.guid
+        mission.publisher_nickname = self.user.nickname
+        mission.publisher_faction = self.user.faction
+        mission.audit_log.append(models.MissionAuditLogEntry.published(self.user))
+        mission.put()
+
+    self.redirect('/missions/%s' % mission.guid, abort=True, code=303)
+
 
 class Update(RequestHandler):
 

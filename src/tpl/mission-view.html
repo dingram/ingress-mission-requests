@@ -16,6 +16,20 @@
 <p>Mission not found.</p>
 {% else %}
 <h2>{{mission.title|default:'(Untitled mission)'}}</h2>
+
+<form action="" method="POST">
+{% if mission.state == 'AWAITING_REVIEW' or mission.state == 'NEEDS_REVISION' %}<p><input type="submit" name="state_start_review" value="Start review"></p>{% endif %}
+{% if mission.state == 'UNDER_REVIEW' %}<p><input type="submit" name="state_accept" value="Accept"><br>
+<input type="text" length="50" name="revision_reason"> <input type="submit" name="state_revision" value="Ask for changes"><br>
+<input type="text" length="50" name="rejection_reason"> <input type="submit" name="state_reject" value="Reject"><br>
+<input type="submit" name="state_reset_review" value="Return to draft"></p>{% endif %}
+{% if mission.state == 'REJECTED' %}<p><input type="text" length="50" name="revision_reason"> <input type="submit" name="state_revision" value="Ask for changes"><br>
+<input type="submit" name="state_reset_review" value="Return to draft"></p>{% endif %}
+{% if mission.state == 'ACCEPTED' %}<p><input type="submit" name="state_start_creation" value="Start creating mission"></p>{% endif %}
+{% if mission.state == 'CREATING' %}<p><input type="submit" name="state_finish_creation" value="Finish creating mission"></p>{% endif %}
+{% if mission.state == 'CREATED' %}<p><input type="submit" name="state_publish" value="Publish mission"></p>{% endif %}
+</form>
+
 <table class="mission-info">
 	<tr><th>Mission state:</th><td>{{mission.state}}</td></tr>
 	<tr><th>Last modified:</th><td>{{mission.last_modified}} UTC ({{mission.last_modified|timesince}} ago)</td></tr>
