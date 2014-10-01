@@ -17,9 +17,8 @@
 <p>Looks like you're logged in, but not registered. Let's fix that:</p>
 <p><a href="/signup" class="btn"><paper-button raisedButton>Sign up</paper-button></a></p>
 {% else %}
-{% if USER.is_superadmin or not USER.is_mission_creator %}
-<p>Welcome, {{USER.nickname}}.</p>
-{% if not drafts and not review_queue %}
+<p>Welcome, {{USER.nickname}}.{% if USER.is_mission_creator %} You have the power to create missions.{% endif %}</p>
+{% if not USER.is_mission_creator and not drafts and not review_queue %}
 <p>It's time to get started!</p>
 {% else %}
 
@@ -46,11 +45,7 @@
 {% endif %}
 
 {% endif %}
-<p><a href="/missions/create"><paper-button raisedButton>Propose a new mission</paper-button></a> <a href="/signup"><paper-button>Update your details</paper-button></a>{% if USER.is_superadmin or USER.is_mission_creator %} <a href="/queue"><paper-button class="admin">View the queue</paper-button></a>{% endif %}</p>
-{% else %}
-<p>Welcome, {{USER.nickname}}. You have the power to create missions.</p>
-<p><a href="/queue"><paper-button raisedButton class="admin">View the queue</paper-button></a> <a href="/signup"><paper-button>Update your details</paper-button></a></p>
-{% endif %}
+<p>{% if USER.is_superadmin or USER.is_mission_creator %}<a href="/queue"><paper-button raisedButton class="admin">View the queue</paper-button></a> {% endif %}<a href="/missions/create"><paper-button raisedButton>Propose a new mission</paper-button></a> <a href="/signup"><paper-button>Update your details</paper-button></a></p>
 {% endif %}
 
 {% endif %}
