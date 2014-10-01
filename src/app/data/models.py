@@ -271,11 +271,17 @@ class Mission(GuidModel):
       default=enums.MissionState.DRAFT)
 
   s2_cells = ndb.StringProperty(indexed=True, repeated=True)
+  geo_city = ndb.StringProperty(indexed=True, repeated=True)
+  geo_country = ndb.StringProperty(indexed=True, repeated=True)
+  geo_description = ndb.StringProperty(indexed=True)
+
   title = ndb.StringProperty(indexed=True)
   description = ndb.StringProperty(indexed=False)
   type = ndb.StringProperty(indexed=True, choices=enums.MissionType._values)
   icon_url = ndb.StringProperty(indexed=False)
   waypoints = ndb.LocalStructuredProperty(MissionWaypoint, repeated=True)
+  country_code = ndb.StringProperty(indexed=True)
+  attn = ndb.StringProperty(indexed=True)
 
   audit_log = ndb.LocalStructuredProperty(MissionAuditLogEntry, repeated=True)
 
