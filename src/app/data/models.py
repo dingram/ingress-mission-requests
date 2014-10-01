@@ -3,6 +3,8 @@ import logging
 
 from google.appengine.ext import ndb
 
+import s2
+
 from app.data import AutoUuidProperty
 from app.data import GuidModel
 from app.data import GuidProperty
@@ -212,6 +214,19 @@ class MissionWaypoint(GuidModel):
   passphrase = ndb.StringProperty(indexed=False)
   s2_cells = ndb.StringProperty(indexed=False, repeated=True)
 
+  def _prepare_for_put(self):
+    """Prepare model for putting to the datastore.
+
+    Overridden to set s2_cells."""
+    super(MissionWaypoint, self)._prepare_for_put()
+    cells = set()
+    base_cellid = s2.S2CellId.fromLatLng(s2.S2LatLng.fromE6(self.latE6,
+      self.lngE6))
+    for lvl in range(14, 0, -2):
+      cells.add('%x' % base_cellid.parent(lvl).id)
+    if set(self.s2_cells) != cells:
+      self.s2_cells = sorted(cells)
+
   def lat(self):
     return float(self.latE6) / 1e6
 
@@ -263,6 +278,17 @@ class Mission(GuidModel):
   waypoints = ndb.LocalStructuredProperty(MissionWaypoint, repeated=True)
 
   audit_log = ndb.LocalStructuredProperty(MissionAuditLogEntry, repeated=True)
+
+  def _prepare_for_put(self):
+    """Prepare model for putting to the datastore.
+
+    Overridden to set s2_cells from waypoints."""
+    super(Mission, self)._prepare_for_put()
+    cells = set()
+    for w in self.waypoints:
+      cells.update(w.s2_cells)
+    if set(self.s2_cells) != cells:
+      self.s2_cells = sorted(cells)
 
   @classmethod
   def new_draft(cls, owner):
