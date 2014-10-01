@@ -33,6 +33,8 @@
 </form>
 {% endif %}
 
+<p><a href="/guidelines">Mission guidelines</a></p>
+
 <table class="mission-info">
 	<tr><th>Mission state:</th><td><core-icon icon="{{mission.status_icon}}" style="color: {{mission.status_color}}"></core-icon> {{mission.state}}</td></tr>
 	{% if mission.state == 'REJECTED' or mission.state == 'NEEDS_REVISION' %}<tr><th>Reason:</th><td>{{mission.rejection_reason}}</td></tr>{% endif %}

@@ -1,0 +1,45 @@
+{% extends '_base.html' %}
+{% block title %}Ingress Mission Requests: Guidelines{% endblock %}
+{% block pagetitle %}Guidelines{% endblock %}
+{% block bodycontent %}
+<p><strong>Welcome!</strong> I know you're eager to get started suggesting new missions, but please read this page to give you a better chance of success.</p>
+
+<h2>How to make a good mission</h2>
+<ul>
+	<li>Give your mission a <strong>theme</strong>, something to link the story of an interesting journey together.</li>
+	<li>Make sure it's <strong>not trivially simple or too difficult</strong>! Aim for 6-25 waypoints per mission, or around 20-90 minutes.</li>
+	<li>Be sure to make your missions <strong>interesting but not too awkward</strong>. Just hacks might not be thrilling, but too many capture/mod/link/field actions can be frustrating in enemy territory.</li>
+	<li>Appeal to <strong>as many people as possible</strong>. Feel free to use your local language!</li>
+	<li>Don't forget to try <strong>using passphrases or hidden missions</strong>. They can be a lot of fun, and give an extra thrill.</li>
+	<li>Remember: keep your missions <strong>safe</strong>, and think about the shortest path between your waypoints.</li>
+</ul>
+
+<h2>Things to avoid</h2>
+<ul>
+	<li><strong>Do not</strong> include inappropriate or offensive content, and do not include personally identifiable information.</li>
+	<li>Mission details <strong>cannot contain URLs</strong>.</li>
+	<li>Please <strong>do not use copyrighted images</strong>. There are plenty of places to find freely-licensed pictures and icons to use, like <a href="http://commons.wikimedia.org">Wikimedia Commons</a> and <a href="http://pixabay.com">pixabay</a>.</li>
+	<li>Be wary of <strong>creating long missions</strong>. People will be less likely to complete them if it takes a long time, and being partway through a mission can get in the way of normal gameplay.</li>
+</ul>
+
+<h2>Final thoughts</h2>
+<ul>
+	<li>It's fine to create biking or driving missions, but please <strong>label them as such</strong>.</li>
+	<li>Having said that, the original purpose of Ingress was <strong>to get people walking around their local communities</strong> and <strong>discover things they never knew</strong>, so try to encourage that.</li>
+	<li><strong>Play fairly.</strong> Our review team are not likely to create missions that look like they're griefing/trolling a particular faction or group.</li>
+	<li>Above all, <strong>have fun</strong>! Sometimes the rules can be bent for specific themes that catch our imaginations.</li>
+	<li>And finally: our review team has members <strong>from both factions</strong>, and we have agreed to put faction interests aside in order to help the wider community.</li>
+</ul>
+
+<h2>Attribution</h2>
+<p>Please remember that the missions will be created <strong>by one of our volunteers</strong>. This means that their name and faction will show up as the mission creator in Ingress. This is sadly a limitation of the system, so please bear this in mind. We will aim to include your name in the details of the mission.</p>
+<p>If you want a mission to be created by a member of a particular faction (or even a particular reviewer), please note this when submitting your mission.</p>
+
+{% if not USER.accepted_guidelines %}
+<h2>Declaration</h2>
+<form action="" method="POST">
+	<p><label><input name="accept" type="checkbox" required> I have read the guidelines above, and I accept that I will not appear as the creator of the missions I have suggested.</label></p>
+	<p><input type="submit" value="Get started"></p>
+</form>
+{% endif %}
+{% endblock %}

@@ -15,6 +15,8 @@
 {% else %}
 {% if error %}<p style="color: #c00"><strong>ERROR:</strong> {{error}}</p>{% endif %}
 {% if mission.state == "NEEDS_REVISION" %}<p><strong style="color: #f70">Your mission needs updating:</strong> {{mission.rejection_reason}}</p>{% endif %}
+<p><a href="/guidelines">Mission guidelines</a></p>
+
 <form action="/missions/{{mission.guid}}/update" method="POST">
 	<input type="hidden" name="{{XSRF_NAME}}" value="{{XSRF_TOKEN}}">
 

@@ -33,6 +33,8 @@ class User(GuidModel):
   is_mission_creator = ndb.BooleanProperty(indexed=False, default=False)
   is_banned = ndb.BooleanProperty(indexed=False, default=False)
   xsrf_key = AutoUuidProperty(indexed=False)
+  accepted_guidelines = ndb.DateTimeProperty(indexed=False)
+  accepted_creator_guidelines = ndb.DateTimeProperty(indexed=False)
 
   def _prepare_for_put(self):
     """Prepare model for putting to the datastore.

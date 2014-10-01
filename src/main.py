@@ -23,6 +23,7 @@ application = ndb.toplevel(webapp2.WSGIApplication([
   webapp2.Route('/logout', app.views.simple.Logout, 'logout'),
 
   webapp2.Route('/signup', app.views.user.Signup, 'signup'),
+  webapp2.Route('/guidelines', app.views.user.Guidelines, 'guidelines'),
 
   webapp2.Route('/missions/create', app.views.mission.Create, 'create_mission'),
   webapp2.Route('/missions/<guid>', app.views.mission.View, 'view_mission'),

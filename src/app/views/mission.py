@@ -16,6 +16,9 @@ class Create(RequestHandler):
     if not self.user:
       self.redirect('/')
       return
+    if not self.user.accepted_guidelines:
+      self.redirect('/guidelines', abort=True, code=303)
+      return
     mission = models.Mission.new_draft(self.user)
     mission.put()
     self.redirect('/missions/%s' % mission.guid)
@@ -26,6 +29,9 @@ class View(RequestHandler):
   def get(self, *args, **kwargs):
     if not self.user:
       self.redirect('/')
+      return
+    if not self.user.accepted_guidelines:
+      self.redirect('/guidelines', abort=True, code=303)
       return
     mission = models.Mission.fetch_by_guid(self.request.route_kwargs['guid'])
 

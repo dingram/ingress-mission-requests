@@ -1,3 +1,4 @@
+import datetime
 import logging
 import re
 
@@ -12,6 +13,10 @@ class Landing(RequestHandler):
     review_queue = []
 
     if self.user:
+      if not self.user.accepted_guidelines:
+        self.redirect('/guidelines', abort=True, code=303)
+        return
+
       for m in models.Mission.query(models.Mission.owner_guid == self.user.guid):
         if m.state == 'DRAFT':
           draft_missions.append(m)
@@ -72,6 +77,33 @@ class Signup(RequestHandler):
       return
     else:
       self.render_page('signup.html', {'error': error})
+
+
+class Guidelines(RequestHandler):
+
+  def get(self, *args, **kwargs):
+    if not self.gae_user:
+      self.redirect('/login')
+      return
+    if not self.user:
+      self.redirect('/signup')
+      return
+    self.render_page('guidelines.html')
+
+  def post(self, *args, **kwargs):
+    if not self.gae_user:
+      self.redirect('/login')
+      return
+    if not self.user:
+      self.redirect('/signup')
+      return
+    if not 'accept' in self.request.POST:
+      self.redirect('/guidelines', abort=True, code=303)
+      return
+
+    self.user.accepted_guidelines = datetime.datetime.utcnow()
+    self.user.put()
+    self.redirect('/', abort=True, code=303)
 
 
 # vim: et sw=2 ts=2 sts=2 cc=80
