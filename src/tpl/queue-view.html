@@ -19,10 +19,13 @@
 <table>
 	<thead>
 		<tr>
-			<th>Name</th>
+			<th>Title</th>
 			<th>Author</th>
+			<th>Location</th>
+			<th># Wpts</th>
+			<th>Sent for review</th>
 			<th>Last modified</th>
-			<th>State</th>
+			<th>Status</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -30,7 +33,10 @@
 		<tr>
 			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
 			<td class="faction-{{m.owner_faction}}">{{m.owner_nickname}}</td>
-			<td>{{m.last_modified}} UTC</td>
+			<td>{% if m.city %}{{m.city}}, {% endif %}{{m.country_code|default:'???'}}</td>
+			<td>{{m.waypoints|length}}</td>
+			<td><span title="{{m.sent_for_review}} UTC">{{m.sent_for_review|timesince}} ago</span></td>
+			<td><span title="{{m.last_modified}} UTC">{{m.last_modified|timesince}} ago</span></td>
 			<td><core-icon icon="{{m.status_icon}}" style="color: {{m.status_color}}"></core-icon> {{m.state}}</td>
 		</tr>
 {% endfor %}
@@ -43,8 +49,11 @@
 <table>
 	<thead>
 		<tr>
-			<th>Name</th>
+			<th>Title</th>
 			<th>Author</th>
+			<th>Location</th>
+			<th># Wpts</th>
+			<th>FAO</th>
 			<th>Last modified</th>
 			{% if unfiltered %}<th>State</th>{% endif %}
 			{% if unfiltered %}<th>Reviewer</th>{% endif %}
@@ -56,7 +65,10 @@
 		<tr>
 			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
 			<td class="faction-{{m.owner_faction}}">{{m.owner_nickname}}</td>
-			<td>{{m.last_modified}} UTC</td>
+			<td>{% if m.city %}{{m.city}}, {% endif %}{{m.country_code|default:'???'}}</td>
+			<td>{{m.waypoints|length}}</td>
+			<td>{{m.attn|default:'—'}}</td>
+			<td><span title="{{m.last_modified}} UTC">{{m.last_modified|timesince}} ago</span></td>
 			{% if unfiltered %}<td><core-icon icon="{{m.status_icon}}" style="color: {{m.status_color}}"></core-icon> {{m.state}}</td>{% endif %}
 			{% if unfiltered %}<td class="faction-{{m.reviewer_faction}}">{{m.reviewer_nickname|default:'—'}}</td>{% endif %}
 			{% if unfiltered %}<td style="text-align: center">{% if m.is_incomplete %}<core-icon icon="cancel" style="color:#b0120a"></core-icon>{% else %}{% if m.state == 'DRAFT' %}<core-icon icon="check-circle-blank" style="color:#616161"></core-icon>{% else %}<core-icon icon="check-circle-outline" style="color:#42bd41"></core-icon>{% endif %}{% endif %}</a></td>{% endif %}
