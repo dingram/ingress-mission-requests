@@ -1,0 +1,21 @@
+{% extends '_base.html' %}
+{% block css %}
+<link rel="stylesheet" href="https://storage.googleapis.com/ingress-mission-requests.appspot.com/css/admin.css">
+{% endblock %}
+{% block meta %}
+<meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
+{% endblock %}
+{% block html_imports %}
+<link rel="import" href="https://storage.googleapis.com/ingress-mission-requests.appspot.com/polymer-src/core-icon/core-icon.html">
+<link rel="import" href="https://storage.googleapis.com/ingress-mission-requests.appspot.com/polymer-src/paper-button/paper-button.html">
+{% endblock %}
+{% block title %}Ingress Mission Request Admin: Manage users{% endblock %}
+{% block pagetitle %}Admin: Manage users{% endblock %}
+{% block titleiconhref %}/manage/{% endblock %}
+{% block bodycontent %}
+{% if msg %}<p>{{msg}}</p>{% endif %}
+<form action="" method="POST">
+	<p><label><strong>Nickname:</strong> <input name="nickname" type="text" value="" maxlength="15" required></label></p>
+	<p><input type="submit" name="promote" value="Promote to creator" onclick="confirm('Are you sure you want to promote this person?')"> <input type="submit" name="demote" value="Demote from creator" onclick="confirm('Are you sure you want to demote this person?')"></p>
+</form>
+{% endblock %}

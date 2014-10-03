@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+{% block css %}
+<link rel="stylesheet" href="https://storage.googleapis.com/ingress-mission-requests.appspot.com/css/admin.css">
+{% endblock %}
+{% block meta %}
+<meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET">
+{% endblock %}
+{% block html_imports %}
+<link rel="import" href="https://storage.googleapis.com/ingress-mission-requests.appspot.com/polymer-src/core-icon/core-icon.html">
+<link rel="import" href="https://storage.googleapis.com/ingress-mission-requests.appspot.com/polymer-src/paper-button/paper-button.html">
+{% endblock %}
+{% block title %}Ingress Mission Request Admin{% endblock %}
+{% block pagetitle %}Admin{% endblock %}
+{% block bodycontent %}
+<p>Admin, admin, admin.</p>
+<p><a href="/manage/users/"><paper-button raisedButton>Promote user</paper-button></a></p>
+{% endblock %}

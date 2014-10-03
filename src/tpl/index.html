@@ -45,7 +45,7 @@
 {% endif %}
 
 {% endif %}
-<p>{% if USER.is_superadmin or USER.is_mission_creator %}<a href="/queue"><paper-button raisedButton class="admin">View the queue</paper-button></a> {% endif %}<a href="/missions/create"><paper-button raisedButton>Propose a new mission</paper-button></a> <a href="/signup"><paper-button>Update your details</paper-button></a></p>
+<p>{% if USER.is_superadmin or USER.is_mission_creator %}<a href="/queue"><paper-button raisedButton class="admin">View the queue</paper-button></a> {% endif %}<a href="/missions/create"><paper-button raisedButton>Propose a new mission</paper-button></a> <a href="/signup"><paper-button>Update your details</paper-button></a>{% if USER.is_superadmin %}<a href="/manage/"><paper-button class="admin">Management</paper-button></a>{% endif %}</p>
 {% endif %}
 
 {% endif %}

@@ -75,6 +75,10 @@ handlers:
   secure: always
   login: admin
 
+- url: /manage/.*
+  script: main.application
+  login: admin
+
 #- url: /_cron/.*
 #  script: cron.application
 #  login: admin
