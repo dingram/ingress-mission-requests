@@ -37,6 +37,12 @@ a.btn {
 .mission-info th, .mission-info td {
 	padding: 4px;
 }
+.faction-RESISTANCE {
+	color: #003d62;
+}
+.faction-ENLIGHTENED {
+	color: #0c5106;
+}
 
 core-toolbar {
 	background: #9c27b0; /* purple 500 */
