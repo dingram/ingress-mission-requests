@@ -14,7 +14,16 @@ inbound_services:
 - warmup
 
 automatic_scaling:
+  max_idle_instances: 1
   min_pending_latency: 2.0s
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^(.*/)bower.*$
 
 handlers:
 
@@ -46,11 +55,11 @@ handlers:
   login: optional
   expiration: 7d
 
-- url: /polymer-src
-  static_dir: assets/bower_components
-  secure: optional
-  login: optional
-  expiration: 7d
+#- url: /polymer-src
+#  static_dir: assets/bower_components
+#  secure: optional
+#  login: optional
+#  expiration: 7d
 
 #- url: /ttf
 #  static_dir: assets/ttf

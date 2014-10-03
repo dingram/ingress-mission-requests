@@ -1,0 +1,11 @@
+[
+    {
+      "origin": [
+				"https://ingress-mission-requests.appspot.com",
+				"https://test-dot-ingress-mission-requests.appspot.com"
+			],
+      "responseHeader": ["x-meta-goog-custom"],
+      "method": ["GET", "HEAD"],
+      "maxAgeSeconds": 60
+    }
+]
