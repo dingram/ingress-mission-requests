@@ -23,19 +23,30 @@
 	<fieldset>
 	<legend>Basic details</legend>
 
-	<p><label><strong>Mission type:</strong> <select name="type" required>
+	<p><label><strong>Mission type:*</strong> <select name="type" required>
 			<option></option>
 			<option value="SEQUENTIAL"{% if mission.type == 'SEQUENTIAL' %} selected{% endif %}>Sequential</option>
 			<option value="SEQUENTIAL_HIDDEN"{% if mission.type == 'SEQUENTIAL_HIDDEN' %} selected{% endif %}>Sequential, with hidden locations</option>
 			<option value="ANY_ORDER"{% if mission.type == 'ANY_ORDER' %} selected{% endif %}>Any order</option>
 	</select></label></p>
-	<p><label><strong>Title:</strong> <input name="title" type="text" value="{{mission.title|default:''}}" maxlength="50" required></label></p>
+	<p><label><strong>Title:*</strong> <input name="title" type="text" value="{{mission.title|default:''}}" maxlength="50" required></label></p>
 	<p>{% if mission.icon_url %}<img src="{{mission.icon_url}}"> {% endif %}<label><strong>Icon URL:</strong> <input name="icon_url" type="text" value="{{mission.icon_url|default:''}}"></label><br>
 	<span class="faded">The image should be 512x512px and must be in JPG or PNG format.</span></p>
-	<p><label><strong>Description:</strong><br>
+	<p><label><strong>Description:*</strong><br>
 	<textarea name="description">{{mission.description|default:''}}</textarea></label><br>
 	<span class="faded">Maximum 200 characters.</span></p>
 
+	<p><label><strong>Country:*</strong> <select name="country" required>
+			<option></option>
+			{% for code, label in COUNTRIES.items %}
+			<option value="{{code}}"{% if mission.country_code == code %} selected{% endif %}>{{label}}</option>
+			{% endfor %}
+		</select></label><br>
+	<span class="faded">To help our reviewers work more effectively.</span></p>
+	<p><label><strong>City:</strong> <input name="city" type="text" value="{{mission.city|default:''}}"></label><br>
+	<span class="faded">Optional, but useful.</span></p>
+	<p><label><strong>For the attention of:</strong> <input name="attn" type="text" value="{{mission.attn|default:''}}"></label><br>
+	<span class="faded">In case you want the mission to be only processed by a particular agent, or a particular faction.</span></p>
 	</fieldset>
 
 	<fieldset>

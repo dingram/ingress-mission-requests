@@ -1,3 +1,4 @@
+import collections
 import datetime
 import logging
 import re
@@ -8,6 +9,9 @@ from google.appengine.ext import ndb
 from app.data import enums
 from app.data import models
 from app.util.request import RequestHandler
+
+
+COUNTRIES = collections.OrderedDict([('AX', u"\u00c5land Islands"),('AF', u"Afghanistan"),('AL', u"Albania"),('DZ', u"Algeria"),('AS', u"American Samoa"),('AD', u"Andorra"),('AO', u"Angola"),('AI', u"Anguilla"),('AQ', u"Antarctica"),('AG', u"Antigua and Barbuda"),('AR', u"Argentina"),('AM', u"Armenia"),('AW', u"Aruba"),('AU', u"Australia"),('AT', u"Austria"),('AZ', u"Azerbaijan"),('BS', u"Bahamas"),('BH', u"Bahrain"),('BD', u"Bangladesh"),('BB', u"Barbados"),('BY', u"Belarus"),('BE', u"Belgium"),('BZ', u"Belize"),('BJ', u"Benin"),('BM', u"Bermuda"),('BT', u"Bhutan"),('BO', u"Bolivia"),('BA', u"Bosnia and Herzegovina"),('BW', u"Botswana"),('BV', u"Bouvet Island"),('BR', u"Brazil"),('BQ', u"British Antarctic Territory"),('IO', u"British Indian Ocean Territory"),('VG', u"British Virgin Islands"),('BN', u"Brunei"),('BG', u"Bulgaria"),('BF', u"Burkina Faso"),('BI', u"Burundi"),('KH', u"Cambodia"),('CM', u"Cameroon"),('CA', u"Canada"),('CT', u"Canton and Enderbury Islands"),('CV', u"Cape Verde"),('KY', u"Cayman Islands"),('CF', u"Central African Republic"),('TD', u"Chad"),('CL', u"Chile"),('CN', u"China"),('CX', u"Christmas Island"),('CC', u"Cocos [Keeling] Islands"),('CO', u"Colombia"),('KM', u"Comoros"),('CG', u"Congo - Brazzaville"),('CD', u"Congo - Kinshasa"),('CK', u"Cook Islands"),('CR', u"Costa Rica"),('HR', u"Croatia"),('CU', u"Cuba"),('CY', u"Cyprus"),('CZ', u"Czech Republic"),('CI', u"C\u00f4te d\u2019Ivoire"),('DK', u"Denmark"),('DJ', u"Djibouti"),('DM', u"Dominica"),('DO', u"Dominican Republic"),('NQ', u"Dronning Maud Land"),('DD', u"East Germany"),('EC', u"Ecuador"),('EG', u"Egypt"),('SV', u"El Salvador"),('GQ', u"Equatorial Guinea"),('ER', u"Eritrea"),('EE', u"Estonia"),('ET', u"Ethiopia"),('FK', u"Falkland Islands"),('FO', u"Faroe Islands"),('FJ', u"Fiji"),('FI', u"Finland"),('FR', u"France"),('GF', u"French Guiana"),('PF', u"French Polynesia"),('TF', u"French Southern Territories"),('FQ', u"French Southern and Antarctic Territories"),('GA', u"Gabon"),('GM', u"Gambia"),('GE', u"Georgia"),('DE', u"Germany"),('GH', u"Ghana"),('GI', u"Gibraltar"),('GR', u"Greece"),('GL', u"Greenland"),('GD', u"Grenada"),('GP', u"Guadeloupe"),('GU', u"Guam"),('GT', u"Guatemala"),('GG', u"Guernsey"),('GN', u"Guinea"),('GW', u"Guinea-Bissau"),('GY', u"Guyana"),('HT', u"Haiti"),('HM', u"Heard Island and McDonald Islands"),('HN', u"Honduras"),('HK', u"Hong Kong SAR China"),('HU', u"Hungary"),('IS', u"Iceland"),('IN', u"India"),('ID', u"Indonesia"),('IR', u"Iran"),('IQ', u"Iraq"),('IE', u"Ireland"),('IM', u"Isle of Man"),('IL', u"Israel"),('IT', u"Italy"),('JM', u"Jamaica"),('JP', u"Japan"),('JE', u"Jersey"),('JT', u"Johnston Island"),('JO', u"Jordan"),('KZ', u"Kazakhstan"),('KE', u"Kenya"),('KI', u"Kiribati"),('KW', u"Kuwait"),('KG', u"Kyrgyzstan"),('LA', u"Laos"),('LV', u"Latvia"),('LB', u"Lebanon"),('LS', u"Lesotho"),('LR', u"Liberia"),('LY', u"Libya"),('LI', u"Liechtenstein"),('LT', u"Lithuania"),('LU', u"Luxembourg"),('MO', u"Macau SAR China"),('MK', u"Macedonia"),('MG', u"Madagascar"),('MW', u"Malawi"),('MY', u"Malaysia"),('MV', u"Maldives"),('ML', u"Mali"),('MT', u"Malta"),('MH', u"Marshall Islands"),('MQ', u"Martinique"),('MR', u"Mauritania"),('MU', u"Mauritius"),('YT', u"Mayotte"),('FX', u"Metropolitan France"),('MX', u"Mexico"),('FM', u"Micronesia"),('MI', u"Midway Islands"),('MD', u"Moldova"),('MC', u"Monaco"),('MN', u"Mongolia"),('ME', u"Montenegro"),('MS', u"Montserrat"),('MA', u"Morocco"),('MZ', u"Mozambique"),('MM', u"Myanmar [Burma]"),('NA', u"Namibia"),('NR', u"Nauru"),('NP', u"Nepal"),('NL', u"Netherlands"),('AN', u"Netherlands Antilles"),('NT', u"Neutral Zone"),('NC', u"New Caledonia"),('NZ', u"New Zealand"),('NI', u"Nicaragua"),('NE', u"Niger"),('NG', u"Nigeria"),('NU', u"Niue"),('NF', u"Norfolk Island"),('KP', u"North Korea"),('VD', u"North Vietnam"),('MP', u"Northern Mariana Islands"),('NO', u"Norway"),('OM', u"Oman"),('PC', u"Pacific Islands Trust Territory"),('PK', u"Pakistan"),('PW', u"Palau"),('PS', u"Palestinian Territories"),('PA', u"Panama"),('PZ', u"Panama Canal Zone"),('PG', u"Papua New Guinea"),('PY', u"Paraguay"),('YD', u"People's Democratic Republic of Yemen"),('PE', u"Peru"),('PH', u"Philippines"),('PN', u"Pitcairn Islands"),('PL', u"Poland"),('PT', u"Portugal"),('PR', u"Puerto Rico"),('QA', u"Qatar"),('RO', u"Romania"),('RU', u"Russia"),('RW', u"Rwanda"),('RE', u"R\u00e9union"),('BL', u"Saint Barth\u00e9lemy"),('SH', u"Saint Helena"),('KN', u"Saint Kitts and Nevis"),('LC', u"Saint Lucia"),('MF', u"Saint Martin"),('PM', u"Saint Pierre and Miquelon"),('VC', u"Saint Vincent and the Grenadines"),('WS', u"Samoa"),('SM', u"San Marino"),('SA', u"Saudi Arabia"),('SN', u"Senegal"),('RS', u"Serbia"),('CS', u"Serbia and Montenegro"),('SC', u"Seychelles"),('SL', u"Sierra Leone"),('SG', u"Singapore"),('SK', u"Slovakia"),('SI', u"Slovenia"),('SB', u"Solomon Islands"),('SO', u"Somalia"),('ZA', u"South Africa"),('GS', u"South Georgia and the South Sandwich Islands"),('KR', u"South Korea"),('ES', u"Spain"),('LK', u"Sri Lanka"),('SD', u"Sudan"),('SR', u"Suriname"),('SJ', u"Svalbard and Jan Mayen"),('SZ', u"Swaziland"),('SE', u"Sweden"),('CH', u"Switzerland"),('SY', u"Syria"),('ST', u"S\u00e3o Tom\u00e9 and Pr\u00edncipe"),('TW', u"Taiwan"),('TJ', u"Tajikistan"),('TZ', u"Tanzania"),('TH', u"Thailand"),('TL', u"Timor-Leste"),('TG', u"Togo"),('TK', u"Tokelau"),('TO', u"Tonga"),('TT', u"Trinidad and Tobago"),('TN', u"Tunisia"),('TR', u"Turkey"),('TM', u"Turkmenistan"),('TC', u"Turks and Caicos Islands"),('TV', u"Tuvalu"),('UM', u"U.S. Minor Outlying Islands"),('PU', u"U.S. Miscellaneous Pacific Islands"),('VI', u"U.S. Virgin Islands"),('UG', u"Uganda"),('UA', u"Ukraine"),('SU', u"Union of Soviet Socialist Republics"),('AE', u"United Arab Emirates"),('GB', u"United Kingdom"),('US', u"United States"),('UY', u"Uruguay"),('UZ', u"Uzbekistan"),('VU', u"Vanuatu"),('VA', u"Vatican City"),('VE', u"Venezuela"),('VN', u"Vietnam"),('WK', u"Wake Island"),('WF', u"Wallis and Futuna"),('EH', u"Western Sahara"),('YE', u"Yemen"),('ZM', u"Zambia"),('ZW', u"Zimbabwe")])
 
 
 class Create(RequestHandler):
@@ -52,6 +56,7 @@ class View(RequestHandler):
         mission.waypoints.append(models.MissionWaypoint())
 
     self.render_page(template, {
+      'COUNTRIES': COUNTRIES,
       'mission': mission,
       'error': self.request.GET.get('error'),
     })
@@ -221,6 +226,9 @@ class Update(RequestHandler):
     mission_type = self.request.POST.get('type').strip()
     mission.icon_url = self.request.POST.get('icon_url', '').strip()
     mission.description = self.request.POST.get('description', '').strip()
+    mission.country_code = self.request.POST.get('country', '').strip()
+    mission.city = self.request.POST.get('city', '').strip()
+    mission.attn = self.request.POST.get('attn', '').strip()
 
     logging.debug('title: %s' % mission.title)
     logging.debug('type: %s' % mission_type)
@@ -352,8 +360,14 @@ class Update(RequestHandler):
     if mission.icon_url and not re.match(r'^https?://[^/]+\.[^/]+/.*', mission.icon_url):
       err('You must provide a valid URL for the mission icon')
       return
+    if not mission.description:
+      err('You must provide a mission description')
+      return
     if len(mission.description) > 200:
       err('The mission description cannot be longer than 200 characters')
+      return
+    if not mission.country_code:
+      err('You must provide a country')
       return
 
     # update model phase 2
