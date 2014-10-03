@@ -16,6 +16,9 @@ from app.util.helpers import to_ms
 from app.util.timing import Stopwatch
 
 
+MAPS_KEY = 'AIzaSyAxWfqskGbf7ozRLh-fIzs-B5b0pmpI-a8'
+
+
 class User(GuidModel):
   """Datastore representation of a user."""
   guid = GuidProperty(suffix=GuidSuffix.USER, indexed=True)
@@ -236,6 +239,7 @@ class MissionWaypoint(GuidModel):
   def map_url(self):
     import motionless
     m = motionless.DecoratedMap(350, 150, 'satellite')
+    m.key = MAPS_KEY
     m.add_marker(motionless.LatLonMarker(
       float(self.latE6) / 1e6,
       float(self.lngE6) / 1e6,
@@ -369,6 +373,7 @@ class Mission(GuidModel):
   def map_url_overview(self):
     import motionless
     m = motionless.DecoratedMap(600, 450, 'satellite', pathcolor='red')
+    m.key = MAPS_KEY
     num = 0
     try:
       for w in self.waypoints:
