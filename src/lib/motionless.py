@@ -180,7 +180,7 @@ class VisibleMap(Map):
         return url
 
 class DecoratedMap(Map):
-    def __init__(self, size_x=400, size_y=400,maptype='roadmap',region=False,fillcolor='green',pathweight=None,pathcolor=None,):
+    def __init__(self, size_x=400, size_y=400,maptype='roadmap',region=False,fillcolor='green',pathweight=None,pathcolor=None,zoom=None):
         Map.__init__(self,size_x=size_x, size_y=size_y,maptype=maptype)
         self.markers = []
         self.fillcolor = fillcolor
@@ -189,6 +189,7 @@ class DecoratedMap(Map):
         self.region = region
         self.path = []
         self.contains_addresses = False
+        self.zoom = zoom
 
     def check_parameters(self):
         super(DecoratedMap,self).check_parameters()
@@ -279,6 +280,9 @@ class DecoratedMap(Map):
             self.size_y,
             self._get_sensor(),
             self._get_key())
+
+        if self.zoom:
+            url = "%s&zoom=%d" % ( url, self.zoom)
 
         if len(self.markers) > 0:
             url = "%s&%s" % ( url, self._generate_markers())
