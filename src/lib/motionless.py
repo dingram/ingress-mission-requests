@@ -83,6 +83,7 @@ class Map(object):
         self.size_x = size_x
         self.size_y = size_y
         self.sensor = False
+        self.key = None
         self.format = 'png'
         self.maptype = maptype
 
@@ -108,6 +109,12 @@ class Map(object):
         else:
             return 'false'
 
+    def _get_key(self):
+        if self.key:
+            return '&key=%s' % self.key
+        else:
+            return ''
+
     def _check_url(self, url):
         if len(url) > Map.MAX_URL_LEN:
             raise ValueError("Generated URL is %s characters in length. Maximum is %s" % (len(url),Map.MAX_URL_LEN))
@@ -132,7 +139,7 @@ class CenterMap(Map):
 
     def generate_url(self):
         self.check_parameters();
-        url = "%smaptype=%s&format=%s&center=%s&zoom=%s&size=%sx%s&sensor=%s" % (
+        url = "%smaptype=%s&format=%s&center=%s&zoom=%s&size=%sx%s&sensor=%s%s" % (
             self.base_url,
             self.maptype,
             self.format,
@@ -140,7 +147,8 @@ class CenterMap(Map):
             self.zoom,
             self.size_x,
             self.size_y,
-            self._get_sensor())
+            self._get_sensor(),
+            self._get_key())
 
         self._check_url(url)
         return url
@@ -158,13 +166,14 @@ class VisibleMap(Map):
 
     def generate_url(self):
         self.check_parameters();
-        url = "%smaptype=%s&format=%s&size=%sx%s&sensor=%s&visible=%s" % (
+        url = "%smaptype=%s&format=%s&size=%sx%s&sensor=%s%s&visible=%s" % (
             self.base_url,
             self.maptype,
             self.format,
             self.size_x,
             self.size_y,
             self._get_sensor(),
+            self._get_key(),
             "|".join(self.locations))
 
         self._check_url(url)
@@ -262,13 +271,14 @@ class DecoratedMap(Map):
 
     def generate_url(self):
         self.check_parameters();
-        url = "%smaptype=%s&format=%s&size=%sx%s&sensor=%s" % (
+        url = "%smaptype=%s&format=%s&size=%sx%s&sensor=%s%s" % (
             self.base_url,
             self.maptype,
             self.format,
             self.size_x,
             self.size_y,
-            self._get_sensor())
+            self._get_sensor(),
+            self._get_key())
 
         if len(self.markers) > 0:
             url = "%s&%s" % ( url, self._generate_markers())
