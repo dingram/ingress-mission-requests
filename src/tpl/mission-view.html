@@ -42,6 +42,13 @@
 	<tr><th>Reviewer:</th><td>{{mission.reviewer_nickname|default:'—'}}</td></tr>
 	<tr><th>Publisher:</th><td>{{mission.publisher_nickname|default:'—'}}</td></tr>
 	<tr><th>Last modified:</th><td>{{mission.last_modified}} UTC ({{mission.last_modified|timesince}} ago)</td></tr>
+	{% if mission.drafted %}<tr><th>Created:</th><td>{{mission.drafted}} UTC ({{mission.drafted|timesince}} ago)</td></tr>{% endif %}
+	{% if mission.sent_for_review %}<tr><th>Sent for review:</th><td>{{mission.sent_for_review}} UTC ({{mission.sent_for_review|timesince}} ago)</td></tr>{% endif %}
+	{% if mission.started_review %}<tr><th>Started review:</th><td>{{mission.started_review}} UTC ({{mission.started_review|timesince}} ago)</td></tr>{% endif %}
+	{% if mission.finished_review %}<tr><th>Finished review:</th><td>{{mission.finished_review}} UTC ({{mission.finished_review|timesince}} ago)</td></tr>{% endif %}
+	{% if mission.mission_creation_began %}<tr><th>Creation started:</th><td>{{mission.mission_creation_began}} UTC ({{mission.mission_creation_began|timesince}} ago)</td></tr>{% endif %}
+	{% if mission.mission_creation_complete %}<tr><th>Creation finished:</th><td>{{mission.mission_creation_complete}} UTC ({{mission.mission_creation_complete|timesince}} ago)</td></tr>{% endif %}
+	{% if mission.mission_published %}<tr><th>Published:</th><td>{{mission.mission_published}} UTC ({{mission.mission_published|timesince}} ago)</td></tr>{% endif %}
 	<tr><th>Mission type:</th><td>{{mission.type|default:'(No mission type set)'}}</td></tr>
 	{% if mission.icon_url %}<tr><th>Icon:</th><td><a href="{{mission.icon_url}}" target="_blank"><img src="{{mission.icon_url}}" height="256"></a></td></tr>{% endif %}
 	{% if mission.description %}
@@ -74,6 +81,14 @@
 </div>
 {% endfor %}
 </div>
+
+{% if mission.owner_guid != USER.guid %}
+<h3>Quick list of intel URLs</h3>
+<div>{% for obj in mission.waypoints %}
+	<a href="https://www.ingress.com/intel/?ll={{obj.lat}},{{obj.lng}}&pll={{obj.lat}},{{obj.lng}}&z=17" target="_blank">https://www.ingress.com/intel/?ll={{obj.lat}},{{obj.lng}}&pll={{obj.lat}},{{obj.lng}}&z=17</a><br>
+{% endfor %}</div>
+{% endif %}
+
 {% else %}
 <p>No waypoints set!</p>
 {% endif %}
@@ -81,7 +96,7 @@
 <h3>Review log</h3>
 <table class="review-log">
 	<thead>
-		<tr><th>Date</th><th>Agent</td><td>Action</td></tr>
+		<tr><th>Date</th><th>Agent</th><th>Action</th></tr>
 	</thead>
 	<tbody>
 {% for log in mission.audit_log %}
