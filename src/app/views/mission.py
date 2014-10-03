@@ -409,7 +409,7 @@ class Queue(RequestHandler):
       )
       q = q.order(models.Mission.sent_for_review)
 
-    missions, next_cursor, more = (q.fetch_page(50, start_cursor=cursor))
+    missions, next_cursor, more = (q.fetch_page(20, start_cursor=cursor))
 
     q = models.Mission.query(ndb.OR(
       models.Mission.reviewer_guid == self.user.guid,
