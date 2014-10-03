@@ -14,3 +14,11 @@ indexes:
   - name: publisher_guid
   - name: last_modified
     direction: desc
+- kind: Mission
+  properties:
+  - name: state
+  - name: last_modified
+- kind: Mission
+  properties:
+  - name: state
+  - name: sent_for_review

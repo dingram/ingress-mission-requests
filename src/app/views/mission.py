@@ -402,12 +402,13 @@ class Queue(RequestHandler):
 
     if unfiltered:
       q = models.Mission.query()
+      q = q.order(models.Mission.last_modified)
     else:
       q = models.Mission.query(
           models.Mission.state == 'AWAITING_REVIEW',
       )
+      q = q.order(models.Mission.sent_for_review)
 
-    q = q.order(-models.Mission.last_modified)
     missions, next_cursor, more = (q.fetch_page(50, start_cursor=cursor))
 
     q = models.Mission.query(ndb.OR(
