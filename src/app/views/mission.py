@@ -120,7 +120,7 @@ class View(RequestHandler):
             body='Your mission "%s" has been rejected by our reviewers:\n\n%s\n\nThanks for your enthusiasm, and we look forward to whatever new missions you request in future.' % (mission.title, mission.rejection_reason),
         )
       elif 'state_reset_review' in self.request.POST:
-        mission.state = 'UNDER_REVIEW'
+        mission.state = 'AWAITING_REVIEW'
         mission.started_review = None
         mission.audit_log.append(models.MissionAuditLogEntry.re_sent_for_review(self.user))
         mission.put()
@@ -140,7 +140,7 @@ class View(RequestHandler):
             body='Your mission "%s" has been reviewed and needs some changes:\n\n%s\n\nPlease update your mission and submit for review again.' % (mission.title, mission.rejection_reason),
         )
       elif 'state_reset_review' in self.request.POST:
-        mission.state = 'UNDER_REVIEW'
+        mission.state = 'AWAITING_REVIEW'
         mission.started_review = None
         mission.audit_log.append(models.MissionAuditLogEntry.re_sent_for_review(self.user))
         mission.put()
