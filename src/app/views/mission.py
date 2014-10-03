@@ -411,10 +411,23 @@ class Queue(RequestHandler):
 
     missions, next_cursor, more = (q.fetch_page(20, start_cursor=cursor))
 
-    q = models.Mission.query(ndb.OR(
-      models.Mission.reviewer_guid == self.user.guid,
-      models.Mission.publisher_guid == self.user.guid,
-    )).order(-models.Mission.last_modified)
+    my_mission_states = [
+      'UNDER_REVIEW',
+      'ACCEPTED',
+      'NEEDS_REVISION',
+      'CREATING',
+      'CREATED',
+    ]
+    if 'all_my_missions' in self.request.GET:
+      my_mission_states.extend(['PUBLISHED', 'REJECTED'])
+
+    q = models.Mission.query(
+        ndb.OR(
+          models.Mission.reviewer_guid == self.user.guid,
+          models.Mission.publisher_guid == self.user.guid,
+        ),
+        models.Mission.state.IN(my_mission_states)
+    ).order(-models.Mission.last_modified)
     my_missions = q.fetch(50)
 
     self.render_page('queue-view.html', {
