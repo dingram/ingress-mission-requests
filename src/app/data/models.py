@@ -280,6 +280,7 @@ class Mission(GuidModel):
   type = ndb.StringProperty(indexed=True, choices=enums.MissionType._values)
   icon_url = ndb.StringProperty(indexed=False)
   waypoints = ndb.LocalStructuredProperty(MissionWaypoint, repeated=True)
+  city = ndb.StringProperty(indexed=True)
   country_code = ndb.StringProperty(indexed=True)
   attn = ndb.StringProperty(indexed=True)
 
