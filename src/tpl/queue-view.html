@@ -19,7 +19,7 @@
 <table>
 	<thead>
 		<tr>
-			<th>Title</th>
+			<th colspan="2">Title</th>
 			<th>Author</th>
 			<th>Location</th>
 			<th># Wpts</th>
@@ -31,6 +31,7 @@
 	<tbody>
 {% for m in my_missions %}
 		<tr>
+			<td>{% if m.waypoints %}<a href="/missions/{{m.guid}}"><img height="96" width="96" src="{{m.map_url_mini}}"></a>{% endif %}</td>
 			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
 			<td class="faction-{{m.owner_faction}}">{{m.owner_nickname}}</td>
 			<td>{% if m.city %}{{m.city}}, {% endif %}{{m.country_code|default:'???'}}</td>
@@ -49,7 +50,7 @@
 <table>
 	<thead>
 		<tr>
-			<th>Title</th>
+			<th colspan="2">Title</th>
 			<th>Author</th>
 			<th>Location</th>
 			<th># Wpts</th>
@@ -63,6 +64,7 @@
 	<tbody>
 {% for m in missions %}
 		<tr>
+			<td>{% if m.waypoints %}<a href="/missions/{{m.guid}}"><img height="96" width="96" src="{{m.map_url_mini}}"></a>{% endif %}</td>
 			<td><a href="/missions/{{m.guid}}">{{m.title|default:'(Untitled mission)'}}</a></td>
 			<td class="faction-{{m.owner_faction}}">{{m.owner_nickname}}</td>
 			<td>{% if m.city %}{{m.city}}, {% endif %}{{m.country_code|default:'???'}}</td>

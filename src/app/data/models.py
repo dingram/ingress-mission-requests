@@ -394,4 +394,21 @@ class Mission(GuidModel):
       logging.exception('Map failed to generate')
       return ''
 
+  def map_url_mini(self):
+    import motionless
+    m = motionless.DecoratedMap(96, 96, 'roadmap', zoom=6)
+    m.key = MAPS_KEY
+    try:
+      if self.waypoints:
+        m.add_marker(motionless.LatLonMarker(
+          float(self.waypoints[0].latE6) / 1e6,
+          float(self.waypoints[0].lngE6) / 1e6,
+          size='tiny',
+          color='red',
+        ))
+      return m.generate_url()
+    except:
+      logging.exception('Map failed to generate')
+      return ''
+
 # vim: et sw=2 ts=2 sts=2 cc=80
