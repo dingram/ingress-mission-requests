@@ -48,7 +48,7 @@ class View(RequestHandler):
       return
 
     template = 'mission-view.html'
-    if (mission.state in ('DRAFT', 'NEEDS_REVISION') and is_owner) or self.user.is_superadmin:
+    if (mission.state in ('DRAFT', 'NEEDS_REVISION') and is_owner) or (self.user.is_superadmin and 'edit' in self.request.GET):
       template = 'mission-edit.html'
 
       # Add some empty waypoints to keep things interesting
