@@ -18,75 +18,78 @@
 <p><a href="/guidelines">Mission guidelines</a></p>
 
 <form action="/missions/{{mission.guid}}/update" method="POST">
-	<input type="hidden" name="{{XSRF_NAME}}" value="{{XSRF_TOKEN}}">
+  <input type="hidden" name="{{XSRF_NAME}}" value="{{XSRF_TOKEN}}">
 
-	<fieldset>
-	<legend>Basic details</legend>
+  <fieldset>
+  <legend>Basic details</legend>
 
-	<p><label><strong>Mission type:*</strong> <select name="type" required>
-			<option></option>
-			<option value="SEQUENTIAL"{% if mission.type == 'SEQUENTIAL' %} selected{% endif %}>Sequential</option>
-			<option value="SEQUENTIAL_HIDDEN"{% if mission.type == 'SEQUENTIAL_HIDDEN' %} selected{% endif %}>Sequential, with hidden locations</option>
-			<option value="ANY_ORDER"{% if mission.type == 'ANY_ORDER' %} selected{% endif %}>Any order</option>
-	</select></label></p>
-	<p><label><strong>Title:*</strong> <input name="title" type="text" value="{{mission.title|default:''}}" maxlength="50" required></label></p>
-	<p>{% if mission.icon_url %}<img src="{{mission.icon_url}}"> {% endif %}<label><strong>Icon URL:</strong> <input name="icon_url" type="text" value="{{mission.icon_url|default:''}}"></label><br>
-	<span class="faded">The image should be 512x512px and must be in JPG or PNG format.</span></p>
-	<p><label><strong>Description:*</strong><br>
-	<textarea name="description">{{mission.description|default:''}}</textarea></label><br>
-	<span class="faded">Maximum 200 characters.</span></p>
+  <p><label><strong>Mission type:*</strong> <select name="type" required>
+      <option></option>
+      <option value="SEQUENTIAL"{% if mission.type == 'SEQUENTIAL' %} selected{% endif %}>Sequential</option>
+      <option value="SEQUENTIAL_HIDDEN"{% if mission.type == 'SEQUENTIAL_HIDDEN' %} selected{% endif %}>Sequential, with hidden locations</option>
+      <option value="ANY_ORDER"{% if mission.type == 'ANY_ORDER' %} selected{% endif %}>Any order</option>
+  </select></label></p>
+  <p><label><strong>Title:*</strong> <input name="title" type="text" value="{{mission.title|default:''}}" maxlength="50" required></label></p>
+  <p>{% if mission.icon_url %}<img src="{{mission.icon_url}}"> {% endif %}<label><strong>Icon URL:</strong> <input name="icon_url" type="text" value="{{mission.icon_url|default:''}}"></label><br>
+  <span class="faded">The image should be 512x512px and must be in JPG or PNG format.</span></p>
+  <p><label><strong>Description:*</strong><br>
+  <textarea name="description">{{mission.description|default:''}}</textarea></label><br>
+  <span class="faded">Maximum 200 characters.</span></p>
 
-	<p><label><strong>Country:*</strong> <select name="country" required>
-			<option></option>
-			{% for code, label in COUNTRIES.items %}
-			<option value="{{code}}"{% if mission.country_code == code %} selected{% endif %}>{{label}}</option>
-			{% endfor %}
-		</select></label><br>
-	<span class="faded">To help our reviewers work more effectively.</span></p>
-	<p><label><strong>City:</strong> <input name="city" type="text" value="{{mission.city|default:''}}"></label><br>
-	<span class="faded">Optional, but useful.</span></p>
-	<p><label><strong>For the attention of:</strong> <input name="attn" type="text" value="{{mission.attn|default:''}}"></label><br>
-	<span class="faded">In case you want the mission to be only processed by a particular agent, or a particular faction.</span></p>
-	</fieldset>
+  <p><label><strong>Country:*</strong> <select name="country" required>
+      <option></option>
+      {% for code, label in COUNTRIES.items %}
+      <option value="{{code}}"{% if mission.country_code == code %} selected{% endif %}>{{label}}</option>
+      {% endfor %}
+    </select></label><br>
+  <span class="faded">To help our reviewers work more effectively.</span></p>
+  <p><label><strong>City:</strong> <input name="city" type="text" value="{{mission.city|default:''}}"></label><br>
+  <span class="faded">Optional, but useful.</span></p>
+  <p><label><strong>For the attention of:</strong> <input name="attn" type="text" value="{{mission.attn|default:''}}"></label><br>
+  <span class="faded">In case you want the mission to be only processed by a particular agent, or a particular faction.</span></p>
+  </fieldset>
 
-	<fieldset>
-	<legend>Waypoints</legend>
+  <fieldset>
+  <legend>Waypoints</legend>
 
-	{% for w in mission.waypoints %}
-	{% if not forloop.first %}<hr>{% endif %}
-	<div class="waypoint">
-		<p><strong><u>Waypoint {{forloop.counter}}</u></strong></p>
-		<p><label><strong>Title:</strong> <input name="waypoint_{{forloop.counter}}_portal_title" type="text" value="{{w.portal_title|default:''}}" maxlength="50"></label></p>
-		<p><label><strong>Intel link:</strong> <input name="waypoint_{{forloop.counter}}_intel_url" type="text" value="{% if w.latE6 and w.lngE6 %}https://www.ingress.com/intel?ll={{w.lat}},{{w.lng}}&amp;pll={{w.lat}},{{w.lng}}&amp;z=17{% endif %}"></label></p>
-		<!-- {{w.type}} -->
-		<p><label><strong>Action:</strong> <select name="waypoint_{{forloop.counter}}_type">
-				<option></option>
-				<option value="HACK_PORTAL"{% if w.type == 'HACK_PORTAL' %} selected{% endif %}>Hack this portal</option>
-				<option value="INSTALL_ANY_MOD"{% if w.type == 'INSTALL_ANY_MOD' %} selected{% endif %}>Install a mod on this portal</option>
-				<option value="CAPTURE_PORTAL"{% if w.type == 'CAPTURE_PORTAL' %} selected{% endif %}>Capture this portal (or upgrade it/add a mod)</option>
-				<option value="LINK_FROM_PORTAL"{% if w.type == 'LINK_FROM_PORTAL' %} selected{% endif %}>Create a link from this portal</option>
-				<option value="FIELD_FROM_PORTAL"{% if w.type == 'FIELD_FROM_PORTAL' %} selected{% endif %}>Create a field at this portal</option>
-				<option value="ENTER_PASSPHRASE"{% if w.type == 'ENTER_PASSPHRASE' %} selected{% endif %}>Answer a question</option>
-		</select></label></p>
-		<p><label><strong>Location clue:</strong><br>
-		<textarea name="waypoint_{{forloop.counter}}_location_clue">{{w.location_clue|default:''}}</textarea></label><br>
-		<span class="faded">Maximum 200 characters. Only applies for sequential+hidden missions, where it is required.</span></p>
-		<p><label><strong>Description:</strong><br>
-		<textarea name="waypoint_{{forloop.counter}}_description">{{w.description|default:''}}</textarea></label><br>
-		<span class="faded">Maximum 200 characters. Optional.</span></p>
-		<p><label><strong>Question:</strong><br>
-		<textarea name="waypoint_{{forloop.counter}}_question">{{w.question|default:''}}</textarea></label><br>
-		<span class="faded">Maximum 200 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
-		<p><label><strong>Answer:</strong><br>
-		<textarea name="waypoint_{{forloop.counter}}_passphrase">{{w.passphrase|default:''}}</textarea></label><br>
-		<span class="faded">Maximum 50 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
-	</div>
-	{% endfor %}
+  {% for w in mission.waypoints %}
+  {% if not forloop.first %}<hr>{% endif %}
+  <div class="waypoint">
+    <p><strong><u>Waypoint {{forloop.counter}}</u></strong></p>
+    <p><label><strong>Title:</strong> <input name="waypoint_{{forloop.counter}}_portal_title" type="text" value="{{w.portal_title|default:''}}" maxlength="50"></label><br>
+    <span class="faded">Please enter the exact title of the portal, as shown within Ingress.</span></p>
+    <p><label><strong>Intel link:</strong> <input name="waypoint_{{forloop.counter}}_intel_url" type="text" value="{% if w.latE6 and w.lngE6 %}https://www.ingress.com/intel?ll={{w.lat}},{{w.lng}}&amp;pll={{w.lat}},{{w.lng}}&amp;z=17{% endif %}"></label></p>
+    <!-- {{w.type}} -->
+    <p><label><strong>Action:</strong> <select name="waypoint_{{forloop.counter}}_type">
+        <option></option>
+        <option value="HACK_PORTAL"{% if w.type == 'HACK_PORTAL' %} selected{% endif %}>Hack this portal</option>
+        <option value="INSTALL_ANY_MOD"{% if w.type == 'INSTALL_ANY_MOD' %} selected{% endif %}>Install a mod on this portal</option>
+        <option value="CAPTURE_PORTAL"{% if w.type == 'CAPTURE_PORTAL' %} selected{% endif %}>Capture this portal (or upgrade it/add a mod)</option>
+        <option value="LINK_FROM_PORTAL"{% if w.type == 'LINK_FROM_PORTAL' %} selected{% endif %}>Create a link from this portal</option>
+        <option value="FIELD_FROM_PORTAL"{% if w.type == 'FIELD_FROM_PORTAL' %} selected{% endif %}>Create a field at this portal</option>
+        <option value="ENTER_PASSPHRASE"{% if w.type == 'ENTER_PASSPHRASE' %} selected{% endif %}>Answer a question</option>
+    </select></label></p>
+    {% if not forloop.first %}
+    <p><label><strong>Location clue:</strong><br>
+    <textarea name="waypoint_{{forloop.counter}}_location_clue">{{w.location_clue|default:''}}</textarea></label><br>
+    <span class="faded">Maximum 200 characters. Only applies for sequential missions with hidden locations, where it is required.</span></p>
+    {% endif %}
+    <p><label><strong>Description:</strong><br>
+    <textarea name="waypoint_{{forloop.counter}}_description">{{w.description|default:''}}</textarea></label><br>
+    <span class="faded">Maximum 200 characters. Optional.</span></p>
+    <p><label><strong>Question:</strong><br>
+    <textarea name="waypoint_{{forloop.counter}}_question">{{w.question|default:''}}</textarea></label><br>
+    <span class="faded">Maximum 200 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
+    <p><label><strong>Answer:</strong><br>
+    <textarea name="waypoint_{{forloop.counter}}_passphrase">{{w.passphrase|default:''}}</textarea></label><br>
+    <span class="faded">Maximum 50 characters. Only applies for "Answer a question" waypoints, where it is required.</span></p>
+  </div>
+  {% endfor %}
 
-	</fieldset>
+  </fieldset>
 
-	<p class="faded">To add more waypoints, save a draft. Empty waypoints will be ignored.</p>
-	<p><input type="submit" name="save" value="Save Draft"> <input type="submit" name="review" value="Send for Review" onclick="confirm('Are you sure you want to send your mission for review? You can\'t change it afterwards.')"{% if mission.is_incomplete %} disabled{% endif %}></p>
+  <p class="faded">To add more waypoints, save a draft. Waypoints without a title, intel URL, or action will be ignored.</p>
+  <p><input type="submit" name="save" value="Save Draft"> <input type="submit" name="review" value="Send for Review" onclick="confirm('Are you sure you want to send your mission for review? You can\'t change it afterwards.')"{% if mission.is_incomplete %} disabled{% endif %}></p>
 </form>
 {% endif %}
 {% endblock %}
