@@ -79,13 +79,13 @@ handlers:
   script: main.application
   login: admin
 
-#- url: /_cron/.*
-#  script: cron.application
-#  login: admin
+- url: /_cron/.*
+  script: main.application
+  login: admin
 
-#- url: /_tasks/.*
-#  script: tasks.application
-#  login: admin
+- url: /_tasks/.*
+  script: main.application
+  login: admin
 
 # Main app
 #----------

@@ -7,6 +7,8 @@ from google.appengine.ext import ndb
 
 import fix_path
 
+import app.cron
+import app.tasks
 import app.views.simple
 import app.views.manage
 import app.views.mission
@@ -37,7 +39,10 @@ application = ndb.toplevel(webapp2.WSGIApplication([
   webapp2.Route('/manage/users', app.views.manage.Users, 'manage_users'),
   webapp2.Route('/manage/users/', app.views.manage.Users, 'manage_users_s'),
 
-  #webapp2.Route('/_tasks/geocode_mission', app.tasks.Geocode, 'task_geocode'),
+  webapp2.Route('/_cron/reap-empty-missions', app.cron.ReapEmptyMissions, 'cron_reap'),
+
+  #webapp2.Route('/_tasks/geocode-mission', app.tasks.GeocodeMission, 'task_geocode'),
+  webapp2.Route('/_tasks/reap-empty-missions', app.tasks.ReapEmptyMissions, 'task_reap'),
 
   (r'.*', app.views.simple.NotFound),
 ], debug=DEBUG_MODE))

@@ -1,0 +1,5 @@
+cron:
+
+- description: Reap empty missions.
+  url: /_cron/reap-empty-missions
+  schedule: every day 00:00
