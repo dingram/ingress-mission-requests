@@ -27,7 +27,7 @@
 <input type="submit" name="state_reset_review" value="Return to review queue"></p>{% endif %}
 {% if mission.state == 'REJECTED' %}<p><input type="text" length="50" name="revision_reason"> <input type="submit" name="state_revision" value="Ask for changes"><br>
 <input type="submit" name="state_reset_review" value="Return to review queue"></p>{% endif %}
-{% if mission.state == 'ACCEPTED' %}<p><input type="submit" name="state_start_creation" value="Start creating mission"></p>{% endif %}
+{% if mission.state == 'ACCEPTED' %}<p><input type="submit" name="state_start_creation" value="Start creating mission"> <input type="submit" name="state_start_review" value="Return to review"></p>{% endif %}
 {% if mission.state == 'CREATING' %}<p><input type="submit" name="state_finish_creation" value="Finish creating mission"></p>{% endif %}
 {% if mission.state == 'CREATED' %}<p><input type="submit" name="state_publish" value="Publish mission"></p>{% endif %}
 </form>

@@ -76,7 +76,7 @@ class View(RequestHandler):
       self.redirect('/missions/%s' % mission.guid, abort=True, code=303)
       return
 
-    if mission.state == 'AWAITING_REVIEW' or mission.state == 'NEEDS_REVISION':
+    if mission.state in ('AWAITING_REVIEW', 'NEEDS_REVISION', 'ACCEPTED'):
       if 'state_start_review' in self.request.POST:
         mission.state = 'UNDER_REVIEW'
         mission.started_review = datetime.datetime.utcnow()
